@@ -3,9 +3,11 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
+        int len = String.valueOf(N).length();
+        int min = N - 9*(len-1) - N/(int)Math.pow(10, len-1);
 
         int result = 0;
-        for (int i = 1; i < N; i++) {
+        for (int i = min; i < N; i++) {
             String number = String.valueOf(i);
 
             int decompositionSum = i;

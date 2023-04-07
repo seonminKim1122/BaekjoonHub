@@ -5,18 +5,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
 
-        int x = 1;
-        int k = 0;
+        int x = 0;
         if (N != 1) {
-            /*
-            1 < 2 => x = 1 + 6
-            7 < 2 =>
-             */
-            while (x < N) {
-                k++;
-                x += 6*k;
+            while (3*(x)*(x+1) + 1 < N) {
+                x++;
             }
         }
-        System.out.println(k+1);
+        System.out.println(x+1);
     }
 }

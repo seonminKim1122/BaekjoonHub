@@ -6,16 +6,17 @@ public class Main {
         int N = sc.nextInt();
 
         int x = 1;
-        if (N == 1) {
-            System.out.println(x);
-        } else {
-            while (true) {
-                if (3*x*(x-1)+1 < N && N <= 3*x*(x+1)+1) {
-                    break;
-                }
-                x++;
+        int k = 0;
+        if (N != 1) {
+            /*
+            1 < 2 => x = 1 + 6
+            7 < 2 =>
+             */
+            while (x < N) {
+                k++;
+                x += 6*k;
             }
-            System.out.println(x+1);
         }
+        System.out.println(k+1);
     }
 }

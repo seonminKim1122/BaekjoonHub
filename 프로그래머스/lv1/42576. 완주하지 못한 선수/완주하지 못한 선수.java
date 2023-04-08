@@ -6,17 +6,14 @@ class Solution {
         String answer = "";
         Arrays.sort(participant);
         Arrays.sort(completion);
+        answer = participant[participant.length - 1];
 
-        int len = completion.length;
-
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < participant.length - 1; i++) {
             if (!participant[i].equals(completion[i])) {
                 answer = participant[i];
                 break;
             }
         }
-
-        if (answer.equals("")) {answer = participant[len];}
         return answer;
         
     }

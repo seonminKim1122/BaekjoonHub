@@ -1,24 +1,28 @@
 class Solution {
     public int solution(int[] nums) {
         int answer = 0;
+        int length = nums.length;
 
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i+1; j < nums.length; j++) {
-                for (int k = j+1; k < nums.length; k++) {
-                    int sum = nums[i]+nums[j]+nums[k];
-                    boolean flag = true;
-                    for (int l = 2; l <= Math.sqrt(sum); l++) {
-                        if (sum % l == 0)
-                        {
-                            flag = false;
-                            break;
-                        }
+        for (int i = 0; i < length; i++) {
+            for (int j = i+1; j < length; j++) {
+                for (int k = j+1; k < length; k++) {
+                    if(isPrime(nums[i] + nums[j] + nums[k])) {
+                        answer++;
                     }
-                    if (flag) answer++;
                 }
             }
         }
 
         return answer;
+    }
+    
+    public boolean isPrime(int n) {
+        double sqrt = Math.sqrt(n);
+        for (int i = 2; i <= sqrt; i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

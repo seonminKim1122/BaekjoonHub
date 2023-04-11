@@ -3,19 +3,18 @@ import java.util.*;
 class Solution {
     public int solution(int[][] board, int[] moves) {
         int answer = 0;
+        Stack<Integer> basket = new Stack<>();
 
-        Stack<Integer> result = new Stack<>();
-
-        for(int move : moves) {
-            for(int[] i : board) {
-                if(i[move-1] != 0) {
-                    if(!result.isEmpty() && result.peek() == i[move-1]) {
+        for (int move : moves) {
+            for (int[] line : board) {
+                if(line[move-1] != 0) {
+                    if(!basket.isEmpty() && basket.peek() == line[move-1]) {
                         answer += 2;
-                        result.pop();
+                        basket.pop();
                     } else {
-                        result.push(i[move-1]);
+                        basket.push(line[move-1]);
                     }
-                    i[move-1] = 0;
+                    line[move-1] = 0;
                     break;
                 }
             }

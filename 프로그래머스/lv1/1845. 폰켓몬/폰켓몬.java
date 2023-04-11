@@ -1,28 +1,12 @@
+import java.util.*;
 class Solution {
     public int solution(int[] nums) {
-        int answer = 0;
-
-        int max = 0;
-        for(int num : nums) {
-            if(num > max) {
-                max = num;
-            }
+        Map<Integer, Integer> ponketmons = new HashMap<>();
+        
+        for(int ponketmon : nums) {
+            ponketmons.put(ponketmon, (ponketmons.getOrDefault(ponketmon, 0) + 1));
         }
-
-        int[] poketmons = new int[max+1];
-        for(int num : nums) {
-            poketmons[num]++;
-        }
-
-        for(int poketmon : poketmons) {
-            if (poketmon != 0) {
-                answer++;
-                if (answer >= nums.length/2) {
-                    break;
-                }
-            }
-        }
-
-        return answer;
+        
+        return Math.min(ponketmons.size(), nums.length/2);
     }
 }

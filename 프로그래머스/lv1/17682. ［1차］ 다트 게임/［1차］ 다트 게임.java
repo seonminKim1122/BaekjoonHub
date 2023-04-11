@@ -5,10 +5,6 @@ class Solution {
         dartResult = dartResult.replaceAll("10","@");
         char[] calc = dartResult.toCharArray();
         Stack<Integer> point = new Stack<>();
-        // 1S, 1S -> point
-        // 2D, 2D -> tmp
-        // *, tmp, 1S
-        // 10 -> $
         for (char index : calc) {
             if (index - '0' >= 0 && index - '0' <= 9){
                 point.push(index-'0');

@@ -2,46 +2,36 @@ import java.util.Arrays;
 
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        int answer = 0;
+        int answer = n;
+        // n : 전체 학생 수
+        // lost : 체육복을 분실한 학생들
+        // reserve : 체육복 여분이 있는 학생들
 
-        // lost : 체육복을 잃어버린 학생
-        // reserve : 여분 체육복이 있는 학생
-        // lost && reserve : 여분을 분실해서 자기가 입을 것밖에 없는 학생
+        int[] students = new int[n+2];
+        // -1 인 애들은 체육복 빌려야 하는 애들, 0은 체육복 입은 애들, 1 여분 체육복 있는 애들
+        // students[0] 은 제외
+        for(int num : lost) {
+            students[num]--;
+        }
 
-        // 1. lost && reserve 처리(-1)
-        int reserveLength = reserve.length;
-        int lostLength = lost.length;
-        for (int i = 0; i < reserveLength; i++) {
-            for (int j = 0; j < lostLength; j++) {
-                if (reserve[i] == lost[j]) {
-                    reserve[i] = -1;
-                    lost[j] = -1;
-                    break;
+        for(int num : reserve) {
+            students[num]++;
+        }
+
+        // 체육복 없는 애들은 빌리기 시도(실패하면 answer에서 빼주기)
+        for (int i = 1; i < students.length; i++) {
+            if (students[i] == -1) {
+                if (students[i-1] == 1) {
+                    students[i-1]--;
+                    students[i]++;
+                } else if (students[i+1] == 1) {
+                    students[i+1]--;
+                    students[i]++;
+                } else {
+                    answer--;
                 }
             }
         }
-
-        // 2. reserve에서 lost에 옷 빌려주기(reserve는 바로 앞 또는 바로 뒷 번호한테만 빌려줄 수 있음)
-        Arrays.sort(reserve);
-        Arrays.sort(lost);
-        int cnt = 0;
-        for (int i = 0; i < lostLength; i++) {
-            for (int j = 0; j < reserveLength; j++) {
-                if(lost[i] == reserve[j]-1 || lost[i] == reserve[j]+1) {
-                    cnt++;
-                    reserve[j] = -1;
-                    break;
-                }
-            }
-        }
-        // 3. 정답 도출(lost 에서 -1인 애들은 제외)
-        int lostAndReserveCnt = 0;
-        for (int num : lost) {
-            if (num == -1) {
-                lostAndReserveCnt++;
-            }
-        }
-        answer = n - (lost.length - lostAndReserveCnt) + cnt;
         return answer;
     }
 }

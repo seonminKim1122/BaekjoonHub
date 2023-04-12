@@ -7,7 +7,6 @@ public class Main {
         
         int answer = 0;
         int cutByLazer = 0;
-        int originBarCnt = 0;
         boolean isLazer = false;
         
         for (char c : expr.toCharArray()) {
@@ -20,12 +19,10 @@ public class Main {
                     answer += cutByLazer;
                     isLazer = false;
                 } else {
-                    originBarCnt++;
+                    answer++;
                 }
             }
         }
-        
-        answer += originBarCnt;
         System.out.println(answer);
     }
 }

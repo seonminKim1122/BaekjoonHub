@@ -1,46 +1,30 @@
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String s = sc.nextLine();
-        String[] S1 = {"a", "e", "i", "o", "u", "h"};
-        String[] S2 = {"c", "j", "n", "m", "t", "s", "l", "d", "qu"};
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] frontWord = {"c", "j", "n", "m", "t", "s", "l", "d", "qu"};
+        String[] backWord = {"a", "e", "i", "o", "u", "h"};
 
-        Set<String> set1 = new HashSet<>(Arrays.asList("a", "e", "i", "o", "u", "h"));
-        Set<String> set2 = new HashSet<>(Arrays.asList("c", "j", "n", "m", "t", "s", "l", "d", "qu"));
+        int answer = 0;
 
-        String[] S = s.split("");
-        int answer = 1;
-        for (int i = 0; i < S.length; i++) {
-            if (S[i].equals(" ") || S[i].equals("-")) {
-                answer++;
-                continue;
-            }
+        String sentence = br.readLine();
 
-            if (S[i].equals("'")) {
-                if(set1.contains(S[i+1])) {
-                    // 앞 단어 확인
-                    if (set2.contains(S[i-1])) {
-                        if (i < 2){
-                            answer++;
-                        } else {
-                            if(S[i-2].equals("-") || S[i-2].equals(" ")) {
-                                answer++;
-                            }
-                        }
-                    } else if (i>=2){
-                        if (set2.contains(S[i-2]+S[i-1])) {
-                            if (i < 3) {
-                                answer++;
-                            } else {
-                                if (S[i-3].equals("-") || S[i-3].equals(" ")) {
-                                    answer++;
-                                }
-                            }
+        // 띄어쓰기와 하이픈으로 분리
+        String[] strList = sentence.split("[\\s-]");
+        answer += strList.length;
+
+        // 단어에 frontWord 에 해당하는 것이 들어있다면 ? ' 기준으로 나눈다
+        for (String s : strList) {
+            for (String front : frontWord) {
+                if (s.startsWith(front+"'")) {
+                    String[] str = s.split("'");
+                    for (String back : backWord) {
+                        if (str[1].startsWith(back)) {
+                            answer += 1;
+                            continue;
                         }
                     }
                 }

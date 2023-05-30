@@ -24,14 +24,10 @@ public class Main {
         long result = 0;
 
         while (start <= end) { // 정확히 N개를 맞출 수 없는 케이스도 분명 존재할 것
-            result = (start + end) / 2;
+            result = (long) Math.ceil((double)(start + end) / 2);
 
             int count = 0;
             
-            if (result == 0) {
-                result = 1;
-            }
-
             for (int lan : lans) {
                 count += lan / result;
             }

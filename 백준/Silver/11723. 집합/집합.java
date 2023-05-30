@@ -14,19 +14,23 @@ public class Main {
 
         for (int i = 0; i < M; i++) {
             String[] orders = br.readLine().split(" ");
+            int x = 0;
+            if (orders.length > 1) {
+                x = Integer.parseInt(orders[1]);
+            }
 
             switch (orders[0]) {
                 case "add":
-                    S.add(Integer.parseInt(orders[1]));
+                    S.add(x);
                     break;
                 case "remove":
-                    S.remove(Integer.parseInt(orders[1]));
+                    S.remove(x);
                     break;
                 case "toggle":
-                    if (S.contains(Integer.parseInt(orders[1]))) {
-                        S.remove(Integer.parseInt(orders[1]));
+                    if (S.contains(x)) {
+                        S.remove(x);
                     } else {
-                        S.add(Integer.parseInt(orders[1]));
+                        S.add(x);
                     }
                     break;
                 case "all":
@@ -39,7 +43,7 @@ public class Main {
                     S.clear();
                     break;
                 default:
-                    if (S.contains(Integer.parseInt(orders[1]))) {
+                    if (S.contains(x)) {
                         sb.append("1\n");
                     } else {
                         sb.append("0\n");

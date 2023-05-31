@@ -1,15 +1,11 @@
 import java.util.Scanner;
-/*
-2 x n 직사각형 채우기
-1. 2 x (n-1) 직사각형에 2 x 1 타일 추가
-2. 2 x (n-2) 직사각형에 1 x 2 타일 2개 추가
- */
+
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-
-        long[] dp = new long[1001];
+        // 숫자가 엄청 커질 거 같을 땐 모듈러 연산 활용
+        int[] dp = new int[1001];
         dp[0] = 1;
         dp[1] = 1;
         for (int i = 2; i <= n; i++) {

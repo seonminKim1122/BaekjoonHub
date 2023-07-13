@@ -1,37 +1,46 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         int T = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < T; i++) {
-            Stack<String> stack = new Stack<>();
-            String ps = br.readLine();
-            String ans = "YES";
+            String[] PS = br.readLine().split("");
 
-            for(String s : ps.split("")) {
-                if (s.equals("(")) {
-                    stack.push(s);
-                } else { // ) 가 들어오면
+            Stack<String> stack = new Stack<>();
+            boolean isVPS = true;
+            for (String parenthesis : PS) {
+                if (parenthesis.equals("(")) {
+                    stack.push(parenthesis);
+                } else {
                     if (stack.isEmpty()) {
-                        ans = "NO";
+                        isVPS = false;
                         break;
                     } else {
                         stack.pop();
                     }
                 }
             }
+
             if (!stack.isEmpty()) {
-                ans = "NO";
+                isVPS = false;
             }
-            bw.write(ans + "\n");
+
+            if (isVPS) {
+                sb.append("YES");
+            } else {
+                sb.append("NO");
+            }
+            sb.append("\n");
         }
-        bw.flush();
-        bw.close();
-        br.close();
+
+        System.out.println(sb);
     }
 }

@@ -1,84 +1,90 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Main {
-
-    static int[] queue = new int[2000000];
-    static int size = 0;
-    static int front = 0;
-    static int back = 0;
-
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int N = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        Queue queue = new Queue();
 
-        for(int i = 0; i < N; i++) {
+        for (int i = 0; i < N; i++) {
             String[] order = br.readLine().split(" ");
 
             switch (order[0]) {
                 case "push":
-                    push(Integer.parseInt(order[1]));
+                    queue.push(Integer.parseInt(order[1]));
                     break;
                 case "pop":
-                    bw.write(pop() + "\n");
+                    sb.append(queue.pop());
+                    sb.append("\n");
                     break;
                 case "size":
-                    bw.write(size() + "\n");
+                    sb.append(queue.size()).append("\n");
                     break;
                 case "empty":
-                    bw.write(empty() + "\n");
+                    if (queue.isEmpty()) {
+                        sb.append(1);
+                    } else {
+                        sb.append(0);
+                    }
+                    sb.append("\n");
                     break;
                 case "front":
-                    bw.write(front() + "\n");
+                    sb.append(queue.front());
+                    sb.append("\n");
                     break;
-                case "back":
-                    bw.write(back() + "\n");
-                    break;
+                default:
+                    sb.append(queue.back());
+                    sb.append("\n");
             }
         }
-        bw.flush();
-        bw.close();
-        br.close();
+
+        System.out.println(sb);
     }
-    public static void push(int X) {
-        queue[back++] = X;
-        size++;
+}
+
+class Queue {
+    int[] array = new int[20000001];
+    int last = 0;
+    int first = 1;
+
+    void push(int x) {
+        array[++last] = x;
     }
 
-    public static int pop() {
-        if (size == 0) {
+    int pop() {
+        if (isEmpty()) {
             return -1;
-        } else {
-            size--;
-            return queue[front++];
         }
+
+        int result = array[first];
+        array[first++] = 0;
+        return result;
     }
 
-    public static int size() {
-        return size;
+    int size() {
+        return Math.max(last - first + 1, 0);
     }
 
-    public static int empty() {
-        if (size == 0) {
-            return 1;
-        } else {
-            return 0;
-        }
+    boolean isEmpty() {
+        return last < first;
     }
 
-    public static int front() {
-        if (size == 0) {
+    int front() {
+        if (isEmpty()) {
             return -1;
-        } else {
-            return queue[front];
         }
+        return array[first];
     }
 
-    public static int back() {
-        if (size == 0) {
+    int back() {
+        if (isEmpty()) {
             return -1;
-        } else {
-            return queue[back-1];
         }
+        return array[last];
     }
 }

@@ -10,55 +10,37 @@ public class Main {
 
         int N = Integer.parseInt(br.readLine());
         Deque<Integer> deque = new LinkedList<>();
-        StringBuilder sb = new StringBuilder();
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < N; i++) {
             String order = br.readLine();
-            switch (order) {
-                case "pop_front":
-                    if (deque.isEmpty()) {
-                        sb.append(-1).append("\n");
-                    } else {
-                        sb.append(deque.pollFirst()).append("\n");
-                    }
-                    break;
-                case "pop_back":
-                    if (deque.isEmpty()) {
-                        sb.append(-1).append("\n");
-                    } else {
-                        sb.append(deque.pollLast()).append("\n");
-                    }
-                    break;
-                case "size":
+
+            switch (order.charAt(0)) {
+                case 's':
                     sb.append(deque.size()).append("\n");
                     break;
-                case "empty":
-                    if (deque.isEmpty()) {
-                        sb.append(1).append("\n");
-                    } else {
-                        sb.append(0).append("\n");
-                    }
+                case 'e':
+                    sb.append(deque.isEmpty() ? 1 : 0).append("\n");
                     break;
-                case "front":
-                    if (deque.isEmpty()) {
-                        sb.append(-1).append("\n");
-                    } else {
-                        sb.append(deque.getFirst()).append("\n");
-                    }
+                case 'f':
+                    sb.append(deque.isEmpty() ? -1 : deque.getFirst()).append("\n");
                     break;
-                case "back":
-                    if (deque.isEmpty()) {
-                        sb.append(-1).append("\n");
-                    } else {
-                        sb.append(deque.getLast()).append("\n");
-                    }
+                case 'b':
+                    sb.append(deque.isEmpty() ? -1 : deque.getLast()).append("\n");
                     break;
                 default:
-                    String[] s = order.split(" ");
-                    if (s[0].equals("push_front")) {
-                        deque.offerFirst(Integer.parseInt(s[1]));
-                    } else {
-                        deque.offerLast(Integer.parseInt(s[1]));
+                    if (order.charAt(1) == 'u') { // push
+                        if (order.charAt(5) == 'f') { // front
+                            deque.addFirst(Integer.parseInt(order.substring(11)));
+                        } else { // back
+                            deque.addLast(Integer.parseInt(order.substring(10)));
+                        }
+                    } else { // pop
+                        if (order.charAt(4) == 'f') { // front
+                            sb.append(deque.isEmpty() ? -1 : deque.pollFirst()).append("\n");
+                        } else { // back
+                            sb.append(deque.isEmpty() ? -1 : deque.pollLast()).append("\n");
+                        }
                     }
             }
         }

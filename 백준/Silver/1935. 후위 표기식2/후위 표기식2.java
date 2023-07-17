@@ -22,7 +22,7 @@ public class Main {
         for (int i = 0; i < postfixExpression.length(); i++) {
             char ch = postfixExpression.charAt(i);
 
-            if (ch >= 65 && ch <= 90) {
+            if (ch >= 'A' && ch <= 'Z') {
                 stack.push(map.get((char)ch));
             } else {
                 double a = stack.pop();

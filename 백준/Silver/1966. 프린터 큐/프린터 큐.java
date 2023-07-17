@@ -3,44 +3,61 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         int T = Integer.parseInt(br.readLine());
 
         StringBuilder sb = new StringBuilder();
+
         for (int i = 0; i < T; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int N = Integer.parseInt(st.nextToken());
-            int M = Integer.parseInt(st.nextToken());
+            String[] input = br.readLine().split(" ");
 
-            StringTokenizer st2 = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(input[0]);
+            int M = Integer.parseInt(input[1]);
+
             Queue<Integer> queue = new LinkedList<>();
-
-            for (int j = 0; j < N; j++) {
-                int num = Integer.parseInt(st2.nextToken());
-                queue.add(num);
+            String[] importances = br.readLine().split(" ");
+            for (String importance : importances) {
+                queue.add(Integer.parseInt(importance));
             }
+
 
             int targetIdx = M;
             int result = 0;
+
+            int max = getMax(queue);
             while (true) {
-                int max = queue.stream().max((num1, num2) -> num1 - num2).orElseThrow(IllegalArgumentException::new);
-                while (queue.peek() != max) {
+                if (queue.peek() != max) {
                     queue.add(queue.poll());
-                    targetIdx = targetIdx - 1 >= 0 ? targetIdx - 1 : queue.size()-1;
+                } else {
+                    queue.poll();
+                    result++;
+                    if (targetIdx == 0) {
+                        sb.append(result).append("\n");
+                        break;
+                    }
+                    max = getMax(queue);
                 }
-                queue.poll();
-                targetIdx--;
-                result++;
-                if (targetIdx == -1) {
-                    break;
-                }
+                targetIdx = (targetIdx - 1) < 0 ? queue.size() - 1 : targetIdx - 1;
             }
-            sb.append(result).append("\n");
         }
+
         System.out.println(sb);
+    }
+
+    public static int getMax(Queue<Integer> queue) {
+        int max = 0;
+
+        for (int number : queue) {
+            if (max < number) {
+                max = number;
+            }
+        }
+
+        return max;
     }
 }

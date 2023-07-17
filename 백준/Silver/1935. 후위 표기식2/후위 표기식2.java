@@ -13,9 +13,9 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         String postfixExpression = br.readLine();
 
-        Map<Character, Integer> map = new HashMap<>();
+        Map<Character, Double> map = new HashMap<>();
         for (int i = 0; i < N; i++) {
-            map.put((char)(65 + i), Integer.parseInt(br.readLine()));
+            map.put((char)(65 + i), Double.parseDouble(br.readLine()));
         }
 
         Stack<Double> stack = new Stack<>();
@@ -23,7 +23,7 @@ public class Main {
             char ch = postfixExpression.charAt(i);
 
             if (ch >= 65 && ch <= 90) {
-                stack.push((double) map.get((char) ch));
+                stack.push(map.get((char)ch));
             } else {
                 double a = stack.pop();
                 double b = stack.pop();

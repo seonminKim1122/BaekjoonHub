@@ -16,14 +16,17 @@ public class Main {
         Map<String, String> map = new HashMap<>();
 
         for (int i = 0; i < N; i++) {
-            String poketmon = br.readLine();
-            map.put(poketmon, String.valueOf(i+1));
-            map.put(String.valueOf(i+1), poketmon);
+            String pokemon = br.readLine();
+            map.put(pokemon, String.valueOf(i+1));
+            map.put(String.valueOf(i+1), pokemon);
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < M; i++) {
-            String s = br.readLine();
-            System.out.println(map.get(s));
+            String input = br.readLine();
+            sb.append(map.get(input)).append("\n");
         }
+
+        System.out.println(sb);
     }
 }

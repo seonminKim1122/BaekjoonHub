@@ -10,14 +10,14 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Map<String, Double> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         int count = 0;
         while (true) {
             String tree = br.readLine();
 
             if (tree == null || tree.equals("")) break;
 
-            map.put(tree, map.getOrDefault(tree, 0d) + 1);
+            map.put(tree, map.getOrDefault(tree, 0) + 1);
             count++;
         }
 

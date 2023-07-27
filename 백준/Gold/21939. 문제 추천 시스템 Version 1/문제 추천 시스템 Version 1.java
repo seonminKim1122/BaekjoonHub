@@ -9,16 +9,7 @@ public class Main { // 시간 초과(정렬하는 부분에서 뭔가 문제가 
 
         int N = Integer.parseInt(br.readLine());
 
-        TreeSet<Question> questions = new TreeSet<>(new Comparator<Question>() {
-            @Override
-            public int compare(Question q1, Question q2) {
-                if (q1.difficulty == q2.difficulty) {
-                    return q1.number - q2.number;
-                } else {
-                    return q1.difficulty - q2.difficulty;
-                }
-            }
-        });
+        TreeSet<Question> questions = new TreeSet<>();
 
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < N; i++) {
@@ -55,9 +46,12 @@ public class Main { // 시간 초과(정렬하는 부분에서 뭔가 문제가 
                     questions.add(question);
                     map.put(number, difficulty);
                     break;
-
+                    /*
+                    추천 문제 리스트에 없는 문제 번호 P만 입력으로 주어진다. 이전에 추천 문제 리스트에 있던 문제 번호가 다른 난이도로 다시 들어 올 수 있다.
+                    추가 -> 삭제 -> 다른 난이도로 재추가 될 수 있다는 것을 의미
+                    안 푼 문제 리스트에 동일한 번호의 문제가 동시에 여러 개 존재는 X!!
+                     */
                 case "solved":
-                    // Question => number, difficulty 로 구성... number 만 가지고 어캐 찾지
                     int num = Integer.parseInt(inputs[1]);
                     Question q = new Question(num, map.get(num));
                     questions.remove(q);
@@ -69,7 +63,7 @@ public class Main { // 시간 초과(정렬하는 부분에서 뭔가 문제가 
     }
 }
 
-class Question {
+class Question implements Comparable<Question> {
     int number;
     int difficulty;
 
@@ -79,15 +73,11 @@ class Question {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Question)) return false;
-        Question q = (Question) o;
-        return this.number == q.number;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.number + this.difficulty;
+    public int compareTo(Question o) {
+        if (this.difficulty == o.difficulty) {
+            return this.number - o.number;
+        } else {
+            return this.difficulty - o.difficulty;
+        }
     }
 }

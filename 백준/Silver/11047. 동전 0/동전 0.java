@@ -19,7 +19,7 @@ public class Main {
 
         int result = 0;
         int i = 0;
-        while (K != 0) {
+        while (K > 0) {
             int coin = coins[i++];
             int cnt = K / coin;
             result += cnt;

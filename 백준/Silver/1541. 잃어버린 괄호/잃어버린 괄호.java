@@ -1,34 +1,33 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String temp ="";
+        String formula = br.readLine();
+        String[] temp =formula.split("-");
+
         int result = 0;
-        int outOfParenthesis =1;
-
-        String[] formula = br.readLine().split(""); // ex [1 0 + 1 0 + 1 0]
-
-
-        for (int i = 0; i < formula.length ; i++) {
-
-            if(!formula[i].equals("+") && !formula[i].equals("-")){
-
-                temp += formula[i]; //10
-
-            }else {
-
-                result += Integer.parseInt(temp) * outOfParenthesis;
-                temp="";
-                if(formula[i].equals("-")){
-                    outOfParenthesis = -1;
-                }
+        for (int i = 0; i < temp.length; i++) {
+            if (i == 0) {
+                result += calculator(temp[i]);
+            } else {
+                result -= calculator(temp[i]);
             }
-
         }
-        result += Integer.parseInt(temp) * outOfParenthesis;
+
         System.out.println(result);
+    }
+
+    public static int calculator(String input) {
+        String[] numbers = input.split("\\+");
+        int result = 0;
+        for (String number : numbers) {
+            result += Integer.parseInt(number);
+        }
+
+        return result;
     }
 }

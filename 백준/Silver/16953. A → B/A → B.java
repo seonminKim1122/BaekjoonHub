@@ -13,18 +13,15 @@ public class Main {
 
         int cnt = 1;
         while (A != B) {
-            if (A > B) {
+            if (A > B || (B % 10 != 1 && B % 2 != 0)) {
                 cnt = -1;
                 break;
             }
 
             if (B % 10 == 1) {
                 B = (B-1) / 10;
-            } else if (B % 2 == 0){
-                B /= 2;
             } else {
-                cnt = -1;
-                break;
+                B /= 2;
             }
 
             cnt++;

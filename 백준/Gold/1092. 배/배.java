@@ -1,7 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -16,38 +17,47 @@ public class Main {
         }
 
         int M = Integer.parseInt(br.readLine());
-        List<Integer> boxes = new ArrayList<>();
+        int[] boxes = new int[M];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < M; i++) {
-            boxes.add(Integer.parseInt(st.nextToken()));
+            boxes[i] = Integer.parseInt(st.nextToken());
         }
 
         Arrays.sort(cranes);
-        boxes.sort(Collections.reverseOrder());
+        Arrays.sort(boxes);
 
-
+        int craneIdx = N-1;
+        int boxIdx = M-1;
+        int moved = 0;
         int minute = 0;
-        int crandIdx = N-1;
-        int boxIdx = 0;
+        boolean[] isMoved = new boolean[M];
         
-        if (boxes.get(boxIdx) > cranes[crandIdx]) {
+        if (cranes[craneIdx] < boxes[boxIdx]) {
             System.out.println(-1);
             return;
         }
-        
-        while (!boxes.isEmpty()) {
-            if (crandIdx < 0 || boxIdx >= boxes.size()) {
+
+        while (moved < M) {
+            if (craneIdx < 0 || boxIdx < 0) {
+                craneIdx = N-1;
+                boxIdx = M-1;
                 minute++;
-                crandIdx = N-1;
-                boxIdx = 0;
+                continue;
             }
 
-            if (cranes[crandIdx] >= boxes.get(boxIdx)) {
-                crandIdx--;
-                boxes.remove(boxIdx);
+            if (isMoved[boxIdx]) {
+                boxIdx--;
+                continue;
+            }
+
+            if (cranes[craneIdx] >= boxes[boxIdx]) {
+                isMoved[boxIdx] = true;
+                craneIdx--;
+                boxIdx--;
+                moved++;
             } else {
-                boxIdx++;
+                boxIdx--;
             }
         }
 

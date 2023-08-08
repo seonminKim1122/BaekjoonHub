@@ -43,11 +43,13 @@ public class Main {
         }
 
         // 벌 - 꿀통 - 벌
-        int temp = honeys[1] + honeySums[N-1] - honeys[0] - honeys[N-1];
-        if (max < temp) {
-            max = temp;
+        for (int i = 1; i < N-1; i++) {
+            int temp = honeys[i] + honeySums[N-1] - honeys[0] - honeys[N-1];
+            if (max < temp) {
+                max = temp;
+            }
         }
-
+        
         System.out.println(max);
     }
 }

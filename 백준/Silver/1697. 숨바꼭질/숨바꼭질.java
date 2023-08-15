@@ -20,7 +20,7 @@ public class Main {
         queue.add(new int[]{from, 0});
         visited[from] = true;
 
-        while (!queue.isEmpty()) {
+        while (true) {
             int[] temp = queue.poll();
             int now = temp[0];
             int sec = temp[1];

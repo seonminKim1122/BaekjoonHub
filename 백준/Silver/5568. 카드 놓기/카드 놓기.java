@@ -18,23 +18,24 @@ public class Main {
 
         boolean[] visited = new boolean[n];
         Set<Integer> set = new HashSet<>();
-        dfs(numbers, k, 0, 0, set, visited);
+        dfs(numbers, k, 0, set, visited);
 
         System.out.println(set.size());
     }
     
-    public static void dfs(int[] numbers, int k, int number, int depth, Set<Integer> set, boolean[] visited) {
-        if (depth == k) {
+    public static void dfs(int[] numbers, int k, int number, Set<Integer> set, boolean[] visited) {
+        if (k == 0) {
             set.add(number);
+            return;
         }
 
         for (int i = 0; i < numbers.length; i++) {
             if (!visited[i]) {
                 visited[i] = true;
                 if (numbers[i] >= 10) {
-                    dfs(numbers, k, number*100 + numbers[i], depth+1, set, visited);
+                    dfs(numbers, k-1, number*100 + numbers[i], set, visited);
                 } else {
-                    dfs(numbers, k, number*10 + numbers[i], depth+1, set, visited);
+                    dfs(numbers, k-1, number*10 + numbers[i], set, visited);
                 }
                 visited[i] = false;
             }

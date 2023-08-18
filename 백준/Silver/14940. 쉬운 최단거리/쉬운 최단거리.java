@@ -6,7 +6,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -15,62 +14,52 @@ public class Main {
         int m = Integer.parseInt(st.nextToken());
 
         int[][] map = new int[n][m];
+        Queue<int[]> queue = new LinkedList<>();
         boolean[][] visited = new boolean[n][m];
-        int[][] distances = new int[n][m];
-        Queue<Point> queue = new LinkedList<>();
-
+        int[][] result = new int[n][m];
+        
         for (int i = 0; i < n; i++) {
-            StringTokenizer temp = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
-                map[i][j] = Integer.parseInt(temp.nextToken());
-
+                map[i][j] = Integer.parseInt(st.nextToken());
                 if (map[i][j] == 2) {
-                    queue.add(new Point(i, j));
-                    distances[i][j] = 0;
+                    queue.add(new int[]{i, j});
                     visited[i][j] = true;
                 }
             }
         }
 
-        int[] dx = {0 , 0, -1, 1};
-        int[] dy = {1, -1, 0, 0};
-        // bfs 로 거리 계산
-        while (!queue.isEmpty()) {
-            Point point = queue.remove();
-            
-            for (int k = 0; k < 4; k++) {
-                int x = point.x + dx[k];
-                int y = point.y + dy[k];
 
-                if (x < 0 || y < 0 || x >= n || y >= m || map[x][y] != 1 || visited[x][y]) continue;
-                distances[x][y] = distances[point.x][point.y] + 1;
-                queue.add(new Point(x, y));
+
+
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+            for (int i = 0; i < 4; i++) {
+                int x = now[0] + dx[i];
+                int y = now[1] + dy[i];
+
+                if(x < 0 || y < 0 || x >= n || y >= m || visited[x][y] || map[x][y] == 0) continue;
+
+                queue.add(new int[]{x, y});
                 visited[x][y] = true;
+                result[x][y] = result[now[0]][now[1]] + 1;
             }
         }
 
-        // 출력
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (map[i][j] == 1 && !visited[i][j]) {
+                if (map[i][j] != 0 && !visited[i][j]) {
                     sb.append(-1).append(" ");
                 } else {
-                    sb.append(distances[i][j]).append(" ");
+                    sb.append(result[i][j]).append(" ");
                 }
             }
             sb.append("\n");
         }
 
         System.out.println(sb);
-    }
-}
-
-class Point {
-    int x;
-    int y;
-    Point(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 }

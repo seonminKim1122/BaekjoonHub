@@ -29,31 +29,23 @@ public class Main {
             }
         }
 
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        int[] dh = {1, -1};
+        int[] dh = {-1, 1, 0, 0, 0, 0};
+        int[] dx = {0, 0, -1, 1, 0, 0};
+        int[] dy = {0, 0, 0, 0, -1, 1};
 
         int result = 0;
         while (!queue.isEmpty()) {
             int[] temp = queue.poll();
 
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 6; i++) {
                 int h = temp[0] + dh[i];
-
-                if (h < 0 || h >= H || tomatoes[h][temp[1]][temp[2]] != 0) continue;
-
-                queue.add(new int[]{h, temp[1], temp[2], temp[3]+1});
-                tomatoes[h][temp[1]][temp[2]] = 1;
-            }
-
-            for (int i = 0; i < 4; i++) {
                 int x = temp[1] + dx[i];
                 int y = temp[2] + dy[i];
-
-                if (x < 0 || y < 0 || x >= N || y >= M || tomatoes[temp[0]][x][y] != 0) continue;
-
-                queue.add(new int[]{temp[0], x, y, temp[3]+1});
-                tomatoes[temp[0]][x][y] = 1;
+                
+                if (h < 0 || x < 0 || y < 0 || h >= H || x >= N || y >= M || tomatoes[h][x][y] != 0) continue;
+                
+                queue.add(new int[]{h, x, y, temp[3]+1});
+                tomatoes[h][x][y] = 1;
             }
 
             if (queue.isEmpty()) {

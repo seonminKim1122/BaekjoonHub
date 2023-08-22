@@ -30,12 +30,19 @@ public class Main {
                 result[0] = values[start];
                 result[1] = values[end];
             }
-
-            if (mixedValue > 0) {
-                end--;
-            } else {
+            
+            if (Math.abs(values[start+1] + values[end]) < Math.abs(values[start]+values[end-1])) {
                 start++;
+                continue;
+            } else {
+                end--;
             }
+
+//            if (mixedValue > 0) {
+//                end--;
+//            } else {
+//                start++;
+//            }
         }
 
         System.out.println(result[0] + " " + result[1]);

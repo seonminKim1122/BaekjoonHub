@@ -39,7 +39,6 @@ public class Main {
                 for (int j = 0; j < N; j++) {
                     if (isAvailable(i, j)) {
                         int temp = sumOfPrices(i, j);
-                        doVisit(i, j);
                         dfs(cnt + 1, sum + temp);
                         undoVisit(i, j);
                     }
@@ -72,14 +71,6 @@ public class Main {
         return sum;
     }
 
-    public static void doVisit(int i, int j) {
-        for (int k = 0; k < 5; k++) {
-            int x = i + dx[k];
-            int y = j + dy[k];
-
-            visited[x][y] = true;
-        }
-    }
     public static void undoVisit(int i, int j) {
         for (int k = 0; k < 5; k++) {
             int x = i + dx[k];

@@ -58,26 +58,16 @@ public class Main {
                     queue.add(new int[]{x, y, now[2] + 1, now[3] + 1});
                     visited[now[2] + 1][x][y] = true;
                 }
+            } 
+            
+            for (int i = 0; i < 4; i++) {
+                int x = now[0] + monkeyX[i];
+                int y = now[1] + monkeyY[i];
 
-                for (int i = 0; i < 4; i++) {
-                    int x = now[0] + monkeyX[i];
-                    int y = now[1] + monkeyY[i];
+                if (x < 0 || y < 0 || x >= H || y >= W || visited[now[2]][x][y] || grid[x][y] == 1) continue;
 
-                    if (x < 0 || y < 0 || x >= H || y >= W || visited[now[2]][x][y] || grid[x][y] == 1) continue;
-
-                    queue.add(new int[]{x, y, now[2], now[3] + 1});
-                    visited[now[2]][x][y] = true;
-                }
-            } else {
-                for (int i = 0; i < 4; i++) {
-                    int x = now[0] + monkeyX[i];
-                    int y = now[1] + monkeyY[i];
-
-                    if (x < 0 || y < 0 || x >= H || y >= W || visited[now[2]][x][y] || grid[x][y] == 1) continue;
-
-                    queue.add(new int[]{x, y, now[2], now[3] + 1});
-                    visited[now[2]][x][y] = true;
-                }
+                queue.add(new int[]{x, y, now[2], now[3] + 1});
+                visited[now[2]][x][y] = true;
             }
         }
 

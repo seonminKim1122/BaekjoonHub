@@ -1,30 +1,34 @@
-import java.io.*;
-import java.util.*;
+import java.util.Scanner;
+
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        int[] dp = new int[K+1];
-        int[] weights = new int[N];
+        int N, K;
+        int[] values;
+        int weight, value;
 
-        // 초기값 셋팅
-        for (int i = 0; i < N; i++) {
-            StringTokenizer st2 = new StringTokenizer(br.readLine());
+        N = sc.nextInt();
+        K = sc.nextInt();
 
-            int W = Integer.parseInt(st2.nextToken());
-            int V = Integer.parseInt(st2.nextToken());
+        values = new int[K + 1]; //0 ~ K
 
-            if(W > K) continue;
+        for (int n=0; n<N; n++) {
+            weight = sc.nextInt();
+            value = sc.nextInt();
 
-            // 입력받은 무게 이상 중 갱신할 값 있는지 확인
-            for (int j = K; j >= W; j--) {
-                dp[j] = dp[j] < dp[j-W] + V ? dp[j-W] + V : dp[j];
+            if(weight > K) {
+                continue;
+            }
+
+            for(int i=K-weight; i>=0; i--) { //의미없는 계산 방지
+                if (values[i + weight] < values[i] + value) {
+                    values[i + weight] = values[i] + value;
+                }
             }
         }
-        System.out.println(dp[K]);
+
+        System.out.println(values[K]);
     }
 }

@@ -27,10 +27,11 @@ public class Main {
                         return;
                     }
 
-                    if (stack.peek() == '(') {
-                        result += temp;
-                    }
                     temp /= 2;
+                    if (stack.peek() == '(') {
+                        result += temp * 2;
+                    }
+
                     type1--;
                     break;
                 case ']':
@@ -39,10 +40,11 @@ public class Main {
                         return;
                     }
 
-                    if (stack.peek() == '[') {
-                        result += temp;
-                    }
                     temp /= 3;
+                    if (stack.peek() == '[') {
+                        result += temp * 3;
+                    }
+
                     type2--;
                     break;
                 case '(':

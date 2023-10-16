@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -21,11 +20,7 @@ public class Main {
             int C = Integer.parseInt(st.nextToken());
 
             for (int j = D; j >= L; j--) {
-                if (dp[j] == 0) {
-                    dp[j] = C;
-                } else {
-                    dp[j] = Math.max(dp[j], Math.min(dp[j - L], C));
-                }
+                dp[j] = Math.max(dp[j], Math.min(dp[j - L], C));
             }
         }
 

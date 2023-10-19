@@ -38,7 +38,7 @@ public class Main {
                 diff = a - b;
             }
 
-            if (x - a != y - b) {
+            if (diff != targetDiff) {
                 sb.append(-1);
             } else {
                 cnt += x - a;

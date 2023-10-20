@@ -20,18 +20,21 @@ public class Main {
         int[][] dp = new int[M + 1][N + 1];
 
         for (int i = 1; i <= M; i++) {
-            for (int j = 1; j < 2 * i - 1 ; j++) {
-                dp[i][j] = -32768 * 100;
-            }
 
             for (int j = 2 * i - 1; j <= N; j++) {
-                dp[i][j] = dp[i][j-1];
+                if (j == 2 * i - 1 && j - 1 >= 1) {
+                    dp[i][j - 1] = -32768 * 100 - 1;
+                }
+
+                dp[i][j] = dp[i][j - 1];
                 int min = Math.max(2 * i - 3, 0);
                 for (int k = j - 2; k >= min; k--) {
                     dp[i][j] = Math.max(dp[i][j], dp[i-1][k]);
                 }
                 dp[i][j] += numbers[j];
             }
+
+            dp[i][2 * i - 2] = 0;
         }
 
         int result = Integer.MIN_VALUE;

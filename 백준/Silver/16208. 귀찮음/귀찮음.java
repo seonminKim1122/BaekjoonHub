@@ -10,21 +10,19 @@ public class Main {
 
         int n = Integer.parseInt(br.readLine());
         int[] needs = new int[n];
+        int totalLength = 0;
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
             needs[i] = Integer.parseInt(st.nextToken());
+            totalLength += needs[i];
         }
 
         Arrays.sort(needs);
-        int[] sums = new int[n];
-        sums[0] = needs[0];
-        for (int i = 1; i < n; i++) {
-            sums[i] = sums[i - 1] + needs[i];
-        }
 
-        int result = 0;
+        long result = 0;
         for (int i = 0; i < n - 1; i++) {
-            result += needs[i] * (sums[n - 1] - sums[i]);
+            totalLength -= needs[i];
+            result += ((long) needs[i] * totalLength);
         }
 
         System.out.println(result);

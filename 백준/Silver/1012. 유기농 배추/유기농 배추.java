@@ -4,80 +4,65 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    // 연결요소의 갯수를 구하는 문제
-    // 그래프를 어떻게 만들 것인가?
+
+    static int M;
+    static int N;
+
+    static boolean[][] visited;
+    static int[][] cabbageField;
+
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         int T = Integer.parseInt(br.readLine());
-
-        for (int i = 0; i < T; i++) {
+        for (int t = 0; t < T; t++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int M = Integer.parseInt(st.nextToken());
-            int N = Integer.parseInt(st.nextToken());
+
+            M = Integer.parseInt(st.nextToken());
+            N = Integer.parseInt(st.nextToken());
             int K = Integer.parseInt(st.nextToken());
 
-            boolean[][] cabbageField = new boolean[N][M];
-            boolean[][] visited = new boolean[N][M];
+            cabbageField = new int[N][M];
+            visited = new boolean[N][M];
+            for (int i = 0; i < K; i++) {
+                st = new StringTokenizer(br.readLine());
 
-            for (int j = 0; j < K; j++) {
-                StringTokenizer xy = new StringTokenizer(br.readLine());
-                int x = Integer.parseInt(xy.nextToken());
-                int y = Integer.parseInt(xy.nextToken());
+                int X = Integer.parseInt(st.nextToken());
+                int Y = Integer.parseInt(st.nextToken());
 
-                cabbageField[y][x] = true;
+                cabbageField[Y][X] = 1;
             }
 
-            int result = 0;
-            for (int j = 0; j < N; j++) {
-                for (int k = 0; k < M; k++) {
-                    if (cabbageField[j][k] && !visited[j][k]) {
-                        dfs(j, k, cabbageField, visited);
-                        result++;
+            int cnt = 0;
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < M; j++) {
+                    if (cabbageField[i][j] == 1 && !visited[i][j]) {
+                        dfs(i, j);
+                        cnt++;
                     }
                 }
             }
-            sb.append(result).append("\n");
+
+            sb.append(cnt).append("\n");
         }
+
         System.out.println(sb);
     }
 
-    public static void dfs(int y, int x, boolean[][] cabbageField, boolean[][] visited) {
-        visited[y][x] = true;
+    public static void dfs(int i, int j) {
+        visited[i][j] = true;
 
-        int lenOfX = cabbageField[y].length;
-        for (int i = x+1; i < lenOfX; i++) {
-            if (cabbageField[y][i] && !visited[y][i]) {
-                dfs(y, i, cabbageField, visited);
-            } else {
-                break;
-            }
-        }
+        for (int k = 0; k < 4; k++) {
+            int x = i + dx[k];
+            int y = j + dy[k];
 
-        for (int i = x-1; i >= 0; i--) {
-            if (cabbageField[y][i] && !visited[y][i]) {
-                dfs(y, i, cabbageField, visited);
-            } else {
-                break;
-            }
-        }
+            if (x < 0 || y < 0 || x >= N || y >= M || visited[x][y] || cabbageField[x][y] != 1) continue;
 
-        int lenOfY = cabbageField.length;
-        for (int i = y+1; i < lenOfY; i++) {
-            if (cabbageField[i][x] && !visited[i][x]) {
-                dfs(i, x, cabbageField, visited);
-            } else {
-                break;
-            }
-        }
-
-        for (int i = y-1; i >= 0; i--) {
-            if (cabbageField[i][x] && !visited[i][x]) {
-                dfs(i, x, cabbageField, visited);
-            } else {
-                break;
-            }
+            dfs(x, y);
         }
     }
 }

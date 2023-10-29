@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
@@ -43,33 +40,32 @@ public class Main {
         Arrays.fill(dist, 200001);
         dist[K] = 0;
 
-        dijkstra(K);
-
+        dijkstra2(K);
         for (int i = 0; i < V; i++) {
             System.out.println(dist[i] == 200001 ? "INF" : dist[i]);
         }
     }
 
-    public static void dijkstra(int from) {
-        visited[from] = true;
+    public static void dijkstra2(int start) { // 우선순위 큐를 이용한 다익스트라
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>((o1, o2) -> o1.cost - o2.cost);
+        boolean[] visited = new boolean[V];
 
-        List<Node> nodes = graph[from];
-        for (int i = 0; i < nodes.size(); i++) {
-            Node node = nodes.get(i);
-            dist[node.to] = Math.min(dist[node.to], dist[from] + node.cost);
-        }
+        priorityQueue.add(new Node(start, 0));
+        visited[start] = true;
+        dist[start] = 0;
 
-        int next = -1;
-        int min = 200001;
-        for (int i = 0; i < V; i++) {
-            if (!visited[i] && dist[i] < min) {
-                next = i;
-                min = dist[i];
+        while (!priorityQueue.isEmpty()) {
+            Node now = priorityQueue.poll();
+
+            int from = now.to;
+
+            for (Node node : graph[from]) {
+                if (dist[node.to] > dist[from] + node.cost) {
+                    dist[node.to] = dist[from] + node.cost;
+                    priorityQueue.add(new Node(node.to, dist[node.to]));
+                }
             }
         }
-
-        if (next == -1) return;
-        dijkstra(next);
     }
 }
 

@@ -27,7 +27,6 @@ public class Main {
         }
 
         Collections.sort(priorities);
-        Collections.sort(roleCakes);
 
         int result = 0;
         for (int i = 0; i < priorities.size(); i++) {

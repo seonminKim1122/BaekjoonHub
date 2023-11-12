@@ -42,6 +42,8 @@ public class Main {
     }
 
     public static void dfs(int i, int j) {
+        if (result.equals("YES")) return;
+
         visited[i][j] = true;
         if (i == visited.length - 1) {
             result = "YES";
@@ -54,8 +56,7 @@ public class Main {
 
             if (x < 0 || y < 0 || x >= M || y >= N || visited[x][y]) continue;
             if (grid[x][y] == 1) continue;
-            if (result.equals("YES")) break;
-            
+
             dfs(x, y);
         }
     }

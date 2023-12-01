@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -16,62 +14,54 @@ public class Main {
         int N = Integer.parseInt(br.readLine()); // 도시의 개수
         int M = Integer.parseInt(br.readLine()); // 버스의 개수
 
-        List<List<Node>> graph = new ArrayList<>();
-        for (int i = 0; i <= N; i++) {
-            graph.add(new ArrayList<>());
+        int[][] graph = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(graph[i], INF);
+            graph[i][i] = 0;
         }
 
         for (int i = 0; i < M; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
 
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
+            int from = Integer.parseInt(st.nextToken()) - 1;
+            int to = Integer.parseInt(st.nextToken()) - 1;
             int cost = Integer.parseInt(st.nextToken());
 
-            graph.get(from).add(new Node(to, cost));
+            graph[from][to] = Math.min(graph[from][to], cost);
         }
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int start = Integer.parseInt(st.nextToken());
-        int end = Integer.parseInt(st.nextToken());
+        int start = Integer.parseInt(st.nextToken()) - 1;
+        int end = Integer.parseInt(st.nextToken()) - 1;
 
-        int[] dist = new int[N + 1];
-        Arrays.fill(dist, INF);
-        dist[start] = 0;
-        boolean[] visited = new boolean[N + 1];
+        int[] distance = new int[N];
+        Arrays.fill(distance, INF);
+        distance[start] = 0;
 
-        for (int i = 0; i < N; i++) {
+        boolean[] visited = new boolean[N];
+
+        for (int k = 0; k < N; k++) {
+            int min = 100000001;
             int mid = -1;
-            int min = INF;
 
-            for (int j = 1; j <= N; j++) {
-                if (!visited[j] && dist[j] < min) {
-                    mid = j;
-                    min = dist[j];
+            for (int i = 0; i < N; i++) {
+                if (!visited[i] && distance[i] < min) {
+                    min = distance[i];
+                    mid = i;
                 }
             }
-
+            
             if (mid == -1) break;
             
             visited[mid] = true;
-            for (Node node : graph.get(mid)) {
-                if (dist[node.to] > dist[mid] + node.cost) {
-                    dist[node.to] = dist[mid] + node.cost;
+            for (int to = 0; to < N; to++) {
+                if (distance[to] > distance[mid] + graph[mid][to]) {
+                    distance[to] = distance[mid] + graph[mid][to];
                 }
             }
         }
 
-        System.out.println(dist[end]);
-    }
-
-    private static class Node {
-        int to;
-        int cost;
-
-        Node (int to, int cost) {
-            this.to = to;
-            this.cost = cost;
-        }
+        System.out.println(distance[end]);
     }
 }

@@ -6,55 +6,67 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static int INF = 10000;
+    static int N;
+    static int M;
+
+    static boolean[][] relations;
+    static int[][] distance;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        int[][] relations = new int[N+1][N+1];
+        relations = new boolean[N][N];
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int person1 = Integer.parseInt(st.nextToken());
-            int person2 = Integer.parseInt(st.nextToken());
-            relations[person1][person2] = 1;
-            relations[person2][person1] = 1;
+
+            int A = Integer.parseInt(st.nextToken()) - 1;
+            int B = Integer.parseInt(st.nextToken()) - 1;
+
+            relations[A][B] = relations[B][A] = true;
         }
 
-        int min = 6 * N;
-        int result = 0;
-        for (int i = 1; i < N+1; i++) {
-            int d = kevinBacon(relations, i);
-            if (d < min) {
-                min = d;
-                result = i;
+        floydWarshall();
+
+        int person = -1;
+        int minKevinBacon = INF;
+
+        for (int i = 0; i < N; i++) {
+            int kevinBacon = 0;
+            for (int j = 0; j < N; j++) {
+                kevinBacon += distance[i][j];
+            }
+            if (kevinBacon < minKevinBacon) {
+                person = i;
+                minKevinBacon = kevinBacon;
             }
         }
 
-        System.out.println(result);
+        System.out.println(person + 1);
     }
 
-    public static int kevinBacon(int[][] relations, int user) {
-        int N = relations.length;
-        boolean[] visited = new boolean[N];
+    public static void floydWarshall() {
+        // 거리 배열 초기화
+        distance = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (relations[i][j]) distance[i][j] = 1;
+                else distance[i][j] = INF;
+            }
+            distance[i][i] = 0;
+        }
 
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{user, 0});
-        visited[user] = true;
-
-        int result = 0;
-        while (!queue.isEmpty()) {
-            int[] from = queue.poll();
-            result += from[1];
-
-            for (int to = 1; to < N; to++) {
-                if (relations[from[0]][to] == 1 && !visited[to]) {
-                    queue.add(new int[]{to, from[1]+1});
-                    visited[to] = true;
+        for (int mid = 0; mid < N; mid++) {
+            for (int from = 0; from < N; from++) {
+                for (int to = 0; to < N; to++) {
+                    distance[from][to] = Math.min(distance[from][to], distance[from][mid] + distance[mid][to]);
                 }
             }
         }
-        return result;
     }
 }

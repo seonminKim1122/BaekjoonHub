@@ -12,12 +12,12 @@ public class Main {
         
         int[] init = new int[N];
         int start = 1_000_000_000;
-        int end = 1_000_000_001;
         for (int i = 0; i < N; i++) {
             init[i] = Integer.parseInt(br.readLine());
             start = Math.min(start, init[i]);
         }
-
+        
+        int end = start + K;
         while (start <= end) {
             int T = (start + end) / 2;
 

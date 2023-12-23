@@ -1,122 +1,78 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.function.Function;
 
 public class Main {
 
-    static int[] dx = {-1, 1, 0, 0, 0};
-    static int[] dy = {0, 0, -1, 1, 0};
-
-    public static void main(String[] args) throws IOException {
+    private static final char BLACK = '*';
+    private static final char WHITE = '.';
+    private static final int[] DY = {0,-1,0,1,0};
+    private static final int[] DX = {0,0,1,0,-1};
+    private static final int SIZE = 3;
+    private static final int INF = 987654321;
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int T = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
-        for (int t = 0; t < T; t++) {
-
-            char[][] board = new char[3][3];
-            for (int i = 0; i < 3; i++) {
-                String input = br.readLine();
-                for (int j = 0; j < 3; j++) {
-                    board[i][j] = input.charAt(j);
+        Function<String,Integer> stoi = Integer::parseInt;
+        int testCnt = stoi.apply(br.readLine());
+        for(int t = 0 ; t < testCnt ; t++){
+            char[][] map = new char[SIZE][SIZE];
+            for(int i = 0 ; i < SIZE ; i++){
+                String command = br.readLine();
+                for(int j = 0 ; j < SIZE ; j++){
+                    map[i][j] = command.charAt(j);
                 }
             }
+            int result = cal(0,0,map);
+            System.out.println(result);
+        }
+    }
 
-            Queue<Case> queue = new LinkedList<>();
-            boolean[] visited = new boolean[1 << 9];
-            queue.add(new Case(board, 0));
-            visited[boardToBinary(board)] = true;
-
-            int answer = 10;
-            while (!queue.isEmpty()) {
-                Case now = queue.poll();
-
-                if (now.isWhiteBoard()) {
-                    answer = now.cntOfClick;
-                    break;
-                }
-
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (now.board[i][j] == '*') {
-                            for (int k = 0; k < 5; k++) {
-                                int x = i + dx[k];
-                                int y = j + dy[k];
-
-                                if (x < 0 || y < 0 || x >= 3 || y >= 3) continue;
-                                
-                                char[][] newBoard = clickBoard(now.board, x, y);
-                                int binary = boardToBinary(newBoard);
-                                if (visited[binary]) continue;
-                                
-                                queue.add(new Case(newBoard, now.cntOfClick + 1));
-                                visited[binary] = true;
-                            }
-                        }
+    private static int cal(int y, int x, char[][] map) {
+        int result = INF;
+        if(y == SIZE){
+            for(int i = 0 ; i < SIZE ; i++){
+                for(int j = 0 ; j < SIZE ; j++){
+                    if(map[i][j] == BLACK){
+                        return INF;
                     }
                 }
             }
-
-            sb.append(answer).append("\n");
+            return 0;
+        }
+        int nextY = y;
+        int nextX = x + 1;
+        if(nextX >= SIZE){
+            nextY = y+1;
+            nextX = 0;
         }
 
-        System.out.println(sb);
-    }
 
-    static char[][] clickBoard(char[][] board, int i, int j) {
-        char[][] result = new char[3][3];
-        for (int k = 0; k < 3; k++) {
-            for (int l = 0; l < 3; l++) {
-                result[k][l] = board[k][l];
+
+        for(int k = 0 ; k < 5; k++){
+            int ny = y + DY[k];
+            int nx = x + DX[k];
+            if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE){
+                if(map[ny][nx] == BLACK){
+                    map[ny][nx] = WHITE;
+                }else{
+                    map[ny][nx] = BLACK;
+                }
             }
         }
         
-        for (int k = 0; k < 5; k++) {
-            int x = i + dx[k];
-            int y = j + dy[k];
-
-            if (x < 0 || y < 0 || x >= 3 || y >= 3) continue;
-            if (result[x][y] == '.') {
-                result[x][y] = '*';
-            } else {
-                result[x][y] = '.';
-            }
-        }
-
-        return result;
-    }
-
-    static int boardToBinary(char[][] board) {
-        int result = 0;
-        int jinsu = 1;
-        for (int i = 2; i >= 0; i--) {
-            for (int j = 2; j >= 0; j--) {
-                if (board[i][j] == '*') result += jinsu;
-                jinsu *= 2;
-            }
-        }
-
-        return result;
-    }
-
-    static class Case {
-        char[][] board;
-        int cntOfClick;
-
-        Case (char[][] board, int cntOfClick) {
-            this.board = board;
-            this.cntOfClick = cntOfClick;
-        }
-
-        boolean isWhiteBoard() {
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (board[i][j] != '.') return false;
+        result = Math.min(result,cal(nextY,nextX,map) + 1);
+        for(int k = 0 ; k < 5; k++){
+            int ny = y + DY[k];
+            int nx = x + DX[k];
+            if(ny >= 0 && ny < SIZE && nx >= 0 && nx < SIZE){
+                if(map[ny][nx] == BLACK){
+                    map[ny][nx] = WHITE;
+                }else{
+                    map[ny][nx] = BLACK;
                 }
             }
-            return true;
         }
+        result = Math.min(result, cal(nextY,nextX,map));
+        return result;
     }
 }

@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int INF = 100000000;
+    static int INF = 2000 * 1000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -46,10 +46,10 @@ public class Main {
             }
         }
 
-        long temp1 = (long)distance[0][node1] + distance[node1][node2] + distance[node2][N - 1];
-        long temp2 = (long)distance[0][node2] + distance[node2][node1] + distance[node1][N - 1];
+        int temp1 = distance[0][node1] + distance[node1][node2] + distance[node2][N - 1];
+        int temp2 = distance[0][node2] + distance[node2][node1] + distance[node1][N - 1];
 
-        long result = Math.min(temp1, temp2);
+        int result = Math.min(temp1, temp2);
 
         System.out.println(result >= INF ? -1 : result);
     }

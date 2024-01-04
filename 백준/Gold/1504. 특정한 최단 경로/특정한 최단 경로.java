@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int INF = 987654321;
+    static int INF = 100000000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

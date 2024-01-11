@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -37,36 +38,28 @@ public class Main {
     }
 
     public static void diffusion(int[][] room) {
-        Queue<int[]> queue = new LinkedList<>();
         int[][] newRoom = new int[R][C];
-        for (int i = 0; i < R; i++) {
-            for (int j = 0; j < C; j++) {
-                if (room[i][j] > 0) queue.add(new int[]{i, j});
-            }
-        }
-
         int[] dx = {-1, 1, 0, 0};
         int[] dy = {0, 0, -1, 1};
-        while (!queue.isEmpty()) {
-            int[] now = queue.poll();
 
-            int x = now[0];
-            int y = now[1];
+        for (int x = 0; x < R; x++) {
+            for (int y = 0; y < C; y++) {
+                if (room[x][y] > 0) {
+                    int cnt = 0;
+                    for (int i = 0; i < 4; i++) {
+                        int nx = x + dx[i];
+                        int ny = y + dy[i];
 
-            int cnt = 0;
-            for (int i = 0; i < 4; i++) {
-                int nx = x + dx[i];
-                int ny = y + dy[i];
+                        if (nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
+                        if (room[nx][ny] == -1) continue;
 
-                if (nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
-                if (room[nx][ny] == -1) continue;
+                        newRoom[nx][ny] += (room[x][y] / 5);
+                        cnt++;
+                    }
 
-                newRoom[nx][ny] += (room[x][y] / 5);
-                cnt++;
+                    room[x][y] -= (cnt * (room[x][y] / 5));
+                }
             }
-
-            room[x][y] -= (cnt * (room[x][y] / 5));
-            // 확산의 동시에 일어나야 하는데 단순 bfs() 로직으로는 동시에 일어나지 않음
         }
 
         for (int i = 0; i < R; i++) {

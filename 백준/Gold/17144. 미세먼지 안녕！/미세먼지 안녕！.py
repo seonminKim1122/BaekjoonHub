@@ -1,4 +1,8 @@
-def diffuse(room):
+# 문제에 대한 풀이는 Python 으로 제공해드리니 이를 Java 로 변환하는 것을 통해
+# Java 를 다룰 수 있는지 판단하겠습니다.
+
+
+def diffuse(room, R, C):
     next_room = [[0 for j in range(C)] for i in range(R)]
     dx = [-1, 1, 0, 0]
     dy = [0, 0, -1, 1]
@@ -20,7 +24,7 @@ def diffuse(room):
 
     return next_room
 
-def run_aircleaner(room, upper, lower):
+def run_aircleaner(room, upper, lower, R, C):
 
     for i in range(upper - 1, 0, -1):
         room[i][0] = room[i - 1][0]
@@ -65,8 +69,8 @@ for i in range(R):
             lower = i
 
 while T > 0:
-    room = diffuse(room)
-    run_aircleaner(room, upper, lower)
+    room = diffuse(room, R, C)
+    run_aircleaner(room, upper, lower, R, C)
     T -= 1
 
 print(sum_of_dust(room))

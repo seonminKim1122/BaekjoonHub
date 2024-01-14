@@ -14,36 +14,40 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-
-        int[] visitTime = new int[100001];
-        Arrays.fill(visitTime, Integer.MAX_VALUE);
         Queue<Integer> queue = new LinkedList<>();
-        visitTime[N] = 0;
+        int[] visitedTime = new int[100001];
+        Arrays.fill(visitedTime, 100000);
+
         queue.add(N);
+        visitedTime[N] = 0;
 
-
-        int fastestTime = visitTime[K];
-        int numOfWay = 0;
+        int result = 0;
         while (!queue.isEmpty()) {
-            int now = queue.poll();
+            int now = queue.remove();
+            if (visitedTime[now] > visitedTime[K]) continue;
 
             if (now == K) {
-                fastestTime = visitTime[K];
-                numOfWay++;
+                result += 1;
                 continue;
             }
 
-            int[] nexts = {now - 1, now + 1, 2 * now};
-            for (int next : nexts) {
-                if (next < 0 || next > 100000) continue;
-                if (visitTime[now] + 1 <= visitTime[next]) {
-                    queue.add(next);
-                    visitTime[next] = visitTime[now] + 1;
-                }
+            if (now - 1 >= 0 && visitedTime[now - 1] >= visitedTime[now] + 1) {
+                queue.add(now - 1);
+                visitedTime[now - 1] = visitedTime[now] + 1;
+            }
+
+            if (now + 1 <= 100000 && visitedTime[now + 1] >= visitedTime[now] + 1) {
+                queue.add(now + 1);
+                visitedTime[now + 1] = visitedTime[now] + 1;
+            }
+
+            if (2 * now <= 100000 && visitedTime[2 * now] >= visitedTime[now] + 1) {
+                queue.add(2 * now);
+                visitedTime[2 * now] = visitedTime[now] + 1;
             }
         }
 
-        System.out.println(fastestTime);
-        System.out.println(numOfWay);
+        System.out.println(visitedTime[K]);
+        System.out.println(result);
     }
 }

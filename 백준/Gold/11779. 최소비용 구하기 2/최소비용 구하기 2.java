@@ -6,7 +6,7 @@ import java.util.*;
 public class Main {
 
     static int[][] graph;
-    static int INF = 1_000_000_001;
+    static int INF = 987654321;
     static int[] distance;
 
     static HashMap<Integer, List<Integer>> routes = new HashMap<>();
@@ -98,3 +98,12 @@ public class Main {
         }
     }
 }
+/*
+다익스트라 알고리즘을 사용하면 최소 비용 계산 가능
+cost 를 나타내는 배열
+경로를 나타내는 리스트 2 가지 사용
+
+
+cost 배열의 값을 갱신하게 되면
+이전까지의 경로 + 현재 노드 -> 현재 노드의 경로 리스트에 저장
+ */

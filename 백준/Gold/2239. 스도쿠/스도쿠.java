@@ -53,9 +53,10 @@ public class Main {
             if (!isVisited[i] && !isCompleted) { // 답이 여러 개일 수 있으니 한 번 찾으면 더 이상 재귀 안 돌게 해야함
                 board[now[0]][now[1]] = i;
                 sudoku(depth + 1, zeros);
-                board[now[0]][now[1]] = 0; // 백트래킹으로 돌아올 때 값을 채웠던 부분은 다시 빈칸으로 바꿔야 함
             }
         }
+        
+        board[now[0]][now[1]] = 0; // 백트래킹으로 돌아올 때 값을 채웠던 부분은 다시 빈칸으로 바꿔야 함
     }
 
     public static boolean[] visited(int i, int j) {

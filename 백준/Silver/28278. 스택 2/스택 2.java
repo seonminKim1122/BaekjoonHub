@@ -1,50 +1,75 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Stack<Integer> stack = new Stack<>();
-        StringBuilder sb = new StringBuilder();
-
         int N = Integer.parseInt(br.readLine());
-        for (int i = 0; i < N; i++) {
-            String input = br.readLine();
-            int order = input.charAt(0) - '0';
+        Stack stack = new Stack(N);
 
-            switch (order) {
+        StringBuilder answer = new StringBuilder();
+        for (int i = 0; i < N; i++) {
+            StringTokenizer orders = new StringTokenizer(br.readLine());
+
+            int orderNum = Integer.parseInt(orders.nextToken());
+
+            switch (orderNum) {
+                case 1:
+                    stack.push(Integer.parseInt(orders.nextToken()));
+                    break;
                 case 2:
-                    if (stack.isEmpty()) {
-                        sb.append(-1);
-                    } else {
-                        sb.append(stack.pop());
-                    }
-                    sb.append("\n");
+                    answer.append(stack.pop()).append("\n");
                     break;
                 case 3:
-                    sb.append(stack.size());
-                    sb.append("\n");
+                    answer.append(stack.size()).append("\n");
                     break;
                 case 4:
-                    sb.append(stack.isEmpty() ? 1 : 0);
-                    sb.append("\n");
-                    break;
-                case 5:
-                    if (stack.isEmpty()) {
-                        sb.append(-1);
-                    } else {
-                        sb.append(stack.peek());
-                    }
-                    sb.append("\n");
+                    answer.append(stack.isEmpty()).append("\n");
                     break;
                 default:
-                    stack.add(Integer.parseInt(input.split(" ")[1]));
+                    answer.append(stack.peek()).append("\n");
             }
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
+    }
+
+    static class Stack {
+        int[] arr;
+        int top = 0;
+
+        Stack(int maxSize) {
+            arr = new int[maxSize + 1];
+        }
+
+        void push(int x) {
+            arr[++top] = x;
+        }
+
+        int pop() {
+            if (this.isEmpty() == 1) {
+                return -1;
+            } else {
+                int v = arr[top];
+                arr[top--] = 0;
+
+                return v;
+            }
+        }
+
+        int size() {
+            return top;
+        }
+
+        int isEmpty() {
+            return top == 0 ? 1 : 0;
+        }
+
+        int peek() {
+            return this.isEmpty() == 1 ? -1 : arr[top];
+        }
     }
 }

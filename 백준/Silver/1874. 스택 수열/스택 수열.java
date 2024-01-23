@@ -1,44 +1,60 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Stack<Integer> stack = new Stack<>();
-        StringBuilder sb = new StringBuilder();
         int n = Integer.parseInt(br.readLine());
-        int val = 0;
 
+        Stack<Integer> stack = new Stack<>();
+        StringBuilder answer = new StringBuilder();
+
+        int num = 1;
         for (int i = 0; i < n; i++) {
-            int a = Integer.parseInt(br.readLine());
+            int need = Integer.parseInt(br.readLine());
 
-            if(a > val) { // 아직 스택에 담긴 적 없는 값이다
-                // push
-                for (int j = val; j < a; j++) {
-                    stack.push(++val);
-                    sb.append("+\n");
+            if (num > need) { // 이미 필요한 값을 스택에 넣은 적이 있다
+                boolean flag = false;
+                while (!stack.isEmpty()) {
+                    int top = stack.pop();
+                    answer.append("-\n");
+                    if (top == need) {
+                        flag = true;
+                        break;
+                    }
+                }
+                
+                if (!flag) {
+                    answer.setLength(0);
+                    answer.append("NO");
+                    break;
+                }
+            } else { // 아직 넣지 않았다
+                while (num <= need) {
+                    stack.push(num++);
+                    answer.append("+\n");
                 }
                 stack.pop();
-                sb.append("-\n");
-            } else { // 스택에 담긴 적 있는 값 이다
-                // a가 스택에 없을 때
-                if (stack.isEmpty() || stack.peek() < a){
-                    sb.setLength(0);
-                    sb.append("NO\n"); // 이미 있던 버퍼를 비워야 NO만 출력할 수 있는데..
-                    break;
-                } else { // a가 스택에 있을 때
-                    while (stack.peek() != a) {
-                        stack.pop();
-                        sb.append("+\n");
-                    }
-                    stack.pop();
-                    sb.append("-\n");
-                }
+                answer.append("-\n");
             }
         }
-        br.close();
-        System.out.print(sb.toString());
+
+        System.out.println(answer);
     }
 }
+/*
+필요한 값 : m
+현재 넣어야 하는 값 : n
+
+m > n 이면 n == m 될 때까지 push
+m < n 이면 stack에서 pop 하면서 해당 원소 찾기
+
+이미 다른 요소를 뽑는 과정에서 pop 이 되버렸으면 해당 원소를 찾을 수 없을 것이고
+이 경우 stack.isEmpty() -> true 가 될 때 까지 flag 값이 False
+
+시간복잡도 : O(N)
+이유 : for 문 내부에서는 O(1) 인 연산들이 여러 번 수행되는 것일 뿐임
+ */

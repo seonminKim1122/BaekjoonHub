@@ -1,90 +1,108 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-public class Main {
-    public static void main(String[] args) throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int N = Integer.parseInt(br.readLine());
+public class Main{
+    public static void main(String[] argu) throws Exception {
+        Reader in = new Reader();
         StringBuilder sb = new StringBuilder();
-        Queue queue = new Queue();
 
-        for (int i = 0; i < N; i++) {
-            String[] order = br.readLine().split(" ");
+        int n = in.nextInt();
+        int[] queue = new int[n];
+        int l = 0, r = -1;
 
-            switch (order[0]) {
-                case "push":
-                    queue.push(Integer.parseInt(order[1]));
+        while (n-- > 0){
+            char order = in.nextChar();
+
+            switch(order){
+                case 0x68 :
+                    queue[++r] = in.nextInt();
                     break;
-                case "pop":
-                    sb.append(queue.pop());
-                    sb.append("\n");
+
+                case 0x70 :
+                    sb.append(l <= r ? queue[l++] : -1).append('\n');
                     break;
-                case "size":
-                    sb.append(queue.size()).append("\n");
+
+                case 0x65 :
+                    sb.append(r - l + 1).append('\n');
                     break;
-                case "empty":
-                    if (queue.isEmpty()) {
-                        sb.append(1);
-                    } else {
-                        sb.append(0);
-                    }
-                    sb.append("\n");
+
+                case 0x79 :
+                    sb.append(l > r ? 1 : 0).append('\n');
                     break;
-                case "front":
-                    sb.append(queue.front());
-                    sb.append("\n");
+
+                case 0x74 :
+                    sb.append(l <= r ? queue[l] : -1).append('\n');
                     break;
-                default:
-                    sb.append(queue.back());
-                    sb.append("\n");
+
+                case 0x6B :
+                    sb.append(l <= r ? queue[r] : -1).append('\n');
+                    break;
             }
         }
 
-        System.out.println(sb);
+        System.out.print(sb);
     }
 }
 
-class Queue {
-    int[] array = new int[20000001];
-    int last = 0;
-    int first = 1;
+class Reader {
+    final int SIZE = 1 << 13;
+    byte[] buffer = new byte[SIZE];
+    int index, size;
 
-    void push(int x) {
-        array[++last] = x;
+    char nextChar() throws Exception {
+        char ch = ' ';
+        byte c;
+        while ((c = read()) <= 32);
+        do ch = (char)c;
+        while (isAlphabet(c = read()));
+        return ch;
+    }
+    
+    int nextInt() throws Exception {
+        int n = 0;
+        byte c;
+        boolean isMinus = false;
+        while ((c = read()) <= 32); //{ if (size < 0) return -1; }
+        if (c == 45) { c = read(); isMinus = true; }
+        do n = (n << 3) + (n << 1) + (c & 15);
+        while (isNumber(c = read()));
+        return isMinus ? ~n + 1 : n;
     }
 
-    int pop() {
-        if (isEmpty()) {
-            return -1;
+    long nextLong() throws Exception {
+        long n = 0;
+        byte c;
+        boolean isMinus = false;
+        while ((c = read()) <= 32);
+        if (c == 45) { c = read(); isMinus = true; }
+        do n = (n << 3) + (n << 1) + (c & 15);
+        while (isNumber(c = read()));
+        return isMinus ? ~n + 1 : n;
+    }
+
+    double nextDouble() throws Exception {
+        double n = 0, div = 1;
+        byte c;
+        boolean isMinus = false;
+        while ((c = read()) <= 32);
+        if (c == 45) { c = read(); isMinus = true; }
+        else if (c == 46) { c = read(); }
+        do n = (n * 10) + (c & 15);
+        while (isNumber(c = read()));
+        if (c == 46) { while (isNumber(c = read())){ n += (c - 48) / (div *= 10); }}
+        return isMinus ? -n : n;
+    }
+
+    boolean isNumber(byte c) {
+        return 47 < c && c < 58;
+    }
+
+    boolean isAlphabet(byte c){
+        return 96 < c && c < 123;
+    }
+
+    byte read() throws Exception {
+        if (index == size) {
+            size = System.in.read(buffer, index = 0, SIZE);
+            if (size < 0) buffer[0] = -1;
         }
-
-        int result = array[first];
-        array[first++] = 0;
-        return result;
-    }
-
-    int size() {
-        return Math.max(last - first + 1, 0);
-    }
-
-    boolean isEmpty() {
-        return last < first;
-    }
-
-    int front() {
-        if (isEmpty()) {
-            return -1;
-        }
-        return array[first];
-    }
-
-    int back() {
-        if (isEmpty()) {
-            return -1;
-        }
-        return array[last];
+        return buffer[index++];
     }
 }

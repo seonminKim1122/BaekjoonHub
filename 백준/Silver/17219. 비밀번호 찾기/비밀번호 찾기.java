@@ -2,28 +2,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer tokenizer = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(tokenizer.nextToken());
-        int M = Integer.parseInt(tokenizer.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        Map<String, String> passwords = new HashMap<>();
+        HashMap<String, String> cheatSheet = new HashMap<>();
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            passwords.put(st.nextToken(), st.nextToken());
+            st = new StringTokenizer(br.readLine());
+
+            String url = st.nextToken();
+            String password = st.nextToken();
+
+            cheatSheet.put(url, password);
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder answer = new StringBuilder();
         for (int i = 0; i < M; i++) {
-            sb.append(passwords.get(br.readLine())).append("\n");
+            String url = br.readLine();
+            answer.append(cheatSheet.get(url)).append("\n");
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
 }

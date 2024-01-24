@@ -1,31 +1,41 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import java.lang.StringBuilder;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int k = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        sc.nextLine();
+        int N = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
 
-        int[] scores = new int[N];
+        st = new StringTokenizer(br.readLine());
+        int[] numbers = new int[N];
         for (int i = 0; i < N; i++) {
-            scores[i] = sc.nextInt();
-        }
-
-        // 삽입 정렬(내림차순)
-        for (int i = 1; i < N; i++) {
-            int temp = scores[i];
-            for (int j = i; j > 0; j--) {
-                if (scores[j-1] < scores[j]) {
-                    scores[j] = scores[j-1];
-                    scores[j-1] = temp;
-                } else {
-                    break;
-                }
-            }
+            numbers[i] = Integer.parseInt(st.nextToken());
         }
         
-        System.out.println(scores[k-1]);
+        int[] sortedNumbers = bubbleSort(numbers);
+        System.out.println(sortedNumbers[N - k]);
+    }
+
+    public static int[] bubbleSort(int[] numbers) {
+        int N = numbers.length;
+        
+        for (int i = 0; i < N - 1; i++) {
+            for (int j = 0; j < N - 1 - i; j++) {
+                if (numbers[j] > numbers[j + 1]) {
+                    int temp = numbers[j];
+                    numbers[j] = numbers[j + 1];
+                    numbers[j + 1] = temp;
+                }
+            }    
+        }
+        
+        return numbers;
     }
 }

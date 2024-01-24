@@ -1,17 +1,24 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        int[] arr = new int[N];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
 
         for (int i = 0; i < N; i++) {
-            arr[i] = sc.nextInt();
+            pq.add(Integer.parseInt(br.readLine()));
         }
 
-        // 정렬 - 1(with library)
-        Arrays.stream(arr).sorted().forEach(System.out::println);
+        StringBuilder answer = new StringBuilder();
+        while (!pq.isEmpty()) {
+            answer.append(pq.poll()).append("\n");
+        }
+
+        System.out.println(answer);
     }
 }

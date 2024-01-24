@@ -1,33 +1,48 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int[] arr = new int[5];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int[] numbers = new int[5];
         for (int i = 0; i < 5; i++) {
-            arr[i] = sc.nextInt();
+            numbers[i] = Integer.parseInt(br.readLine());
         }
 
+        int[] sortedNumbers = insertionSort(numbers);
+
         int sum = 0;
-        // 선택 정렬
-        for (int i = 0; i < 4; i++) {
-            int minIdx = i;
-            for (int j = i+1; j < 5; j++) {
-                if (arr[j] < arr[minIdx]) {
-                    minIdx = j;
+        for (int i = 0; i < 5; i++) {
+            sum += sortedNumbers[i];
+        }
+
+        StringBuilder answer = new StringBuilder();
+        answer.append(sum / 5).append("\n");
+        answer.append(sortedNumbers[5 / 2]);
+
+        System.out.println(answer);
+    }
+
+    public static int[] insertionSort(int[] numbers) {
+        int N = numbers.length;
+
+        for (int i = 1; i < N; i++) {
+            int num = numbers[i];
+            int j = i - 1;
+            while (j >= 0) {
+                if (numbers[j] > num) {
+                    numbers[j + 1] = numbers[j];
+                } else {
+                    break;
                 }
+                j--;
             }
-            int temp = arr[minIdx];
-            arr[minIdx] = arr[i];
-            arr[i] = temp;
-            sum += temp;
+            numbers[j + 1] = num;
         }
-        sum+=arr[arr.length-1];
-        System.out.println(sum / 5);
-        if (arr.length % 2 == 0) {
-            System.out.println((arr[arr.length/2] + arr[arr.length/2 + 1])/2);
-        } else {
-            System.out.println(arr[arr.length/2]);
-        }
+
+        return numbers;
     }
 }

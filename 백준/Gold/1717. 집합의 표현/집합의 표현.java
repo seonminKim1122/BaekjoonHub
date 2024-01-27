@@ -51,6 +51,7 @@ public class Main {
 
     public static int find(int a) {
         if (parent[a] == -1) return a;
-        return find(parent[a]);
+        parent[a] = find(parent[a]);
+        return parent[a];
     }
 }

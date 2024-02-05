@@ -29,7 +29,8 @@ public class Main {
 
         for (int j = 1; j < N; j++) {
             for (int i = j - 1; i >= 0; i--) {
-                for (int x = 1; x <= j - i ; x++) {
+                int end = (j - i) / 2 + 1;
+                for (int x = 1; x <= end; x++) {
                     int v1 = dp[i + x][j] + dp[i][j - (j - i + 1 - x)] + (R[i] * R[i + x] * C[j]);
                     int v2 = dp[i][j - x] + dp[i + (j - i + 1 - x)][j] + (R[i] * C[j - x] * C[j]);
                     int v = Math.min(v1, v2);
@@ -41,3 +42,6 @@ public class Main {
         System.out.println(dp[0][N - 1]);
     }
 }
+/*
+4 * 1 이나 1 * 4 나 같으므로 x 의 범위를 더 줄일 수 있지 않나?
+ */

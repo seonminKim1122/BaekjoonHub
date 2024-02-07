@@ -15,6 +15,7 @@ public class Main {
         boolean[] isNotPrime = new boolean[end + 1];
         isNotPrime[1] = true;
         for (int i = 2; i <= end; i++) {
+            if (isNotPrime[i]) continue;
             for (int j = i * 2; j <= end; j += i) {
                 isNotPrime[j] = true;
             }
@@ -30,3 +31,7 @@ public class Main {
         System.out.println(answer);
     }
 }
+/*
+에라토스테네스의 체로 풀이
+O(Nlog(logN))
+ */

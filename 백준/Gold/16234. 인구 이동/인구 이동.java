@@ -1,15 +1,22 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-public class Main { // 예제 다 맞는데 1프로에서 틀린다...
+public class Main {
 
+    static int populationSum;
+    static int cnt;
+    static int[][] populations;
     static int N;
     static int L;
     static int R;
-    static List<int[]> group;
+
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+    static List<int[]> union;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +26,7 @@ public class Main { // 예제 다 맞는데 1프로에서 틀린다...
         L = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
 
-        int[][] populations = new int[N][N];
+        populations = new int[N][N];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < N; j++) {
@@ -27,90 +34,63 @@ public class Main { // 예제 다 맞는데 1프로에서 틀린다...
             }
         }
 
-        /*
-        국경선이 open 되는 그룹끼리 묶고,
-        각 그룹의 인구 수가 모두 동일하다면 인구 이동 X
-        동일하지 않다면 인구 이동 O
-         */
-
         int day = 0;
         while (true) {
-            boolean isMove = false;
-
-            boolean[][] visited = new boolean[N][N];
+            boolean[][] isUnion = new boolean[N][N];
+            int movedCnt = 0;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    if (!visited[i][j]) {
-                        group = new ArrayList<>();
-                        int groupPopulation = bfs(i, j, populations, visited);
-                        if (move(populations, groupPopulation)) {
-                            isMove = true;
-                        }
+                    if (!isUnion[i][j]) {
+                        union = new ArrayList<>();
+                        populationSum = 0;
+                        cnt = 0;
+
+                        dfs(i, j, isUnion);
+                        movedCnt += move();
                     }
                 }
             }
-
-            if (!isMove) break;
+            
+            // 인구 이동
+            if (movedCnt == 0) break;
             day++;
         }
 
         System.out.println(day);
     }
 
-    public static int bfs(int i, int j, int[][] populations, boolean[][] visited) {
-        int sum = 0;
-        int cnt = 0;
-
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{i, j});
-        group.add(new int[]{i, j});
-        visited[i][j] = true;
-        sum += populations[i][j];
+    static void dfs(int i, int j, boolean[][] isUnion) {
+        isUnion[i][j] = true;
         cnt++;
+        populationSum += populations[i][j];
+        union.add(new int[]{i, j});
 
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        while (!queue.isEmpty()) {
-            int[] temp = queue.poll();
-            int x = temp[0];
-            int y = temp[1];
+        for (int k = 0; k < 4; k++) {
+            int nx = i + dx[k];
+            int ny = j + dy[k];
 
-            for (int k = 0; k < 4; k++) {
-                int nx = x + dx[k];
-                int ny = y + dy[k];
+            if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
+            if (isUnion[nx][ny]) continue;
+            
+            int diff = Math.abs(populations[i][j] - populations[nx][ny]);
+            if (diff < L || diff > R) continue;
 
-                if (nx < 0 || ny < 0 || nx >= N || ny >= N || visited[nx][ny]) continue;
-
-                int diff = Math.abs(populations[x][y] - populations[nx][ny]);
-                if (diff < L || diff > R) continue;
-
-                queue.add(new int[]{nx, ny});
-                group.add(new int[]{nx, ny});
-                visited[nx][ny] = true;
-                sum += populations[nx][ny];
-                cnt++;
-            }
+            dfs(nx, ny, isUnion);
         }
-
-        return sum / cnt;
     }
 
-    public static boolean move(int[][] populations, int groupPopulation) {
-        boolean isMoved = false;
+    static int move() {
+        int value = populationSum / cnt;
 
-        int L = group.size();
-
-        for (int i = 0; i < L; i++) {
-            int[] temp = group.get(i);
-            int x = temp[0];
-            int y = temp[1];
-
-            if (populations[x][y] != groupPopulation) {
-                populations[x][y] = groupPopulation;
-                isMoved = true;
+        int result = 0;
+        for (int i = 0; i < union.size(); i++) {
+            int[] now = union.get(i);
+            if (populations[now[0]][now[1]] != value) {
+                populations[now[0]][now[1]] = value;
+                result = 1;
             }
         }
 
-        return isMoved;
+        return result;
     }
 }

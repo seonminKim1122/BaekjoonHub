@@ -5,7 +5,7 @@ class Solution {
         int b = yellow;
         
         int temp = (int)Math.sqrt(a * (a - 4) - 4 * (b - 1));
-        System.out.println(temp);
+
         int N = (a + 2 - temp) / 2;
         int M = a + 2 - N;
         

@@ -17,7 +17,6 @@ public class Main {
         int[][] dp = new int[N + 1][K + 1];
         for (int i = 0; i <= N; i++) {
             Arrays.fill(dp[i], INF);
-            dp[i][0] = 0;
         }
 
         int[] C = new int[N + 1];
@@ -27,6 +26,11 @@ public class Main {
             if (K >= C[i]) {
                 dp[i][C[i]] = 1;
             }
+        }
+
+        if (K == 0) {
+            System.out.println(0);
+            return;
         }
 
         for (int i = 1; i <= N; i++) {

@@ -7,8 +7,7 @@ for i in range(N):
 
 for i in range(N):
     W, V = items[i]
-    for j in range(K, 0, -1):
-        if j - W >= 0:
-            dp[j] = max(dp[j], dp[j - W] + V)
+    for j in range(K, W-1, -1):
+        dp[j] = max(dp[j], dp[j - W] + V)
 
 print(dp[K])

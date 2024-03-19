@@ -5,50 +5,28 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken()); // K
-        int INF = N + 1;
+        int K = Integer.parseInt(st.nextToken());
 
-        int[][] dp = new int[N + 1][K + 1];
-        for (int i = 0; i <= N; i++) {
-            Arrays.fill(dp[i], INF);
-        }
-
-        int[] C = new int[N + 1];
+        int[] coffee = new int[N + 1];
         st = new StringTokenizer(br.readLine());
         for (int i = 1; i <= N; i++) {
-            C[i] = Integer.parseInt(st.nextToken());
-            if (K >= C[i]) {
-                dp[i][C[i]] = 1;
+            coffee[i] = Integer.parseInt(st.nextToken());
+        }
+
+        int[] dp = new int[K + 1];
+        Arrays.fill(dp, N + 1);
+        dp[0] = 0;
+        for (int c : coffee) {
+            for (int i = K; i >= c; i--) {
+                dp[i] = Math.min(dp[i], dp[i - c] + 1);
             }
         }
 
-        if (K == 0) {
-            System.out.println(0);
-            return;
-        }
-
-        for (int i = 1; i <= N; i++) {
-            if (K >= C[i]) {
-                for (int j = 1; j < C[i]; j++) {
-                    dp[i][j] = dp[i - 1][j];
-                }
-
-                for (int j = C[i] + 1; j <= K; j++) {
-                    dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j - C[i]] + 1);
-                }
-            } else {
-                for (int j = 1; j <= K; j++) {
-                    dp[i][j] = dp[i - 1][j];
-                }
-            }
-        }
-
-        System.out.println(dp[N][K] >= INF ? -1 : dp[N][K]);
+        System.out.println(dp[K] == N + 1 ? -1 : dp[K]);
     }
 }

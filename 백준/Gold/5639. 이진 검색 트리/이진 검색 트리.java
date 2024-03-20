@@ -3,41 +3,54 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String input = br.readLine();
         Node root = new Node(Integer.parseInt(input));
         while ((input = br.readLine()) != null && !input.equals("")) {
-            int value = Integer.parseInt(input);
-            root.addLeaf(new Node(value));
+            Node node = new Node(Integer.parseInt(input));
+            root.addLeaf(node);
         }
 
         root.postOrder();
     }
 
-    private static class Node {
-        int value;
+    static class Node {
         Node left;
         Node right;
+        int value;
 
         Node (int value) {
             this.value = value;
         }
 
-        void addLeaf (Node node) {
-            if (value > node.value) {
-                if (left == null) left = node;
-                else left.addLeaf(node);
+        void addLeaf(Node node) {
+            if (node.value < value) {
+                if (left == null) {
+                    left = node;
+                } else {
+                    left.addLeaf(node);
+                }
             } else {
-                if (right == null) right = node;
-                else right.addLeaf(node);
+                if (right == null) {
+                    right = node;
+                } else {
+                    right.addLeaf(node);
+                }
             }
         }
 
         void postOrder() {
-            if (left != null) left.postOrder();
-            if (right != null) right.postOrder();
+            if (left != null) {
+                left.postOrder();
+            }
+
+            if (right != null) {
+                right.postOrder();
+            }
+
             System.out.println(value);
         }
     }

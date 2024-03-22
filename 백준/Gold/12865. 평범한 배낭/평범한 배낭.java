@@ -1,34 +1,34 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-        int N, K;
-        int[] values;
-        int weight, value;
-
-        N = sc.nextInt();
-        K = sc.nextInt();
-
-        values = new int[K + 1]; //0 ~ K
-
-        for (int n=0; n<N; n++) {
-            weight = sc.nextInt();
-            value = sc.nextInt();
-
-            if(weight > K) {
-                continue;
-            }
-
-            for(int i=K-weight; i>=0; i--) { //의미없는 계산 방지
-                if (values[i + weight] < values[i] + value) {
-                    values[i + weight] = values[i] + value;
-                }
+        int[][] items = new int[N][2];
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < 2; j++) {
+                items[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        System.out.println(values[K]);
+        int[] dp = new int[K + 1];
+        for (int i = 0; i < N; i++) {
+            int weight = items[i][0];
+            int value = items[i][1];
+
+            for (int j = K; j >= weight; j--) {
+                dp[j] = Math.max(dp[j], dp[j - weight] + value);
+            }
+        }
+
+        System.out.println(dp[K]);
     }
 }

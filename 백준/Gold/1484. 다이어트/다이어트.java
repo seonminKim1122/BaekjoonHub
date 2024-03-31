@@ -11,22 +11,14 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int G = Integer.parseInt(br.readLine());
-        int l = 1;
-        int r = G;
+        int sqrt = (int)Math.sqrt(G);
 
         List<Integer> answers = new ArrayList<>();
-        while (l < r) {
-            if (l * r == G) {
-                l++;
-                r--;
-
-                if ((l + r) % 2 == 0) {
-                    answers.add((l + r) / 2);
-                }
-            } else if (l * r < G) {
-                l++;
-            } else {
-                r--;
+        for (int i = 1; i <= sqrt; i++) {
+            if (G % i == 0 && (G / i) != i) {
+                int temp = (G / i) + i;
+                if (temp % 2 != 0) continue;
+                answers.add(temp / 2);
             }
         }
 
@@ -40,3 +32,17 @@ public class Main {
         }
     }
 }
+/*
+G = N**2 - P**2
+
+G = (N + P)*(N - P)
+
+i : 1 ~ root(G)
+
+G % i == 0 이 되면 G / i = N + P, i = N - P
+(G / i) + i = 2 * N
+
+((G / i) + i) / 2 => N
+
+
+*/

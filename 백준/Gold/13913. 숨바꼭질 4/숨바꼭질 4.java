@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
@@ -56,13 +53,18 @@ public class Main {
         }
 
 
-        System.out.println(result);
-        int position = K;
         StringBuilder path = new StringBuilder();
-        path.append(position);
-        while (before[position] != -1) {
-            path.insert(0, before[position] + " ");
+        path.append(result).append('\n');
+
+        Stack<Integer> stack = new Stack<>();
+        int position = K;
+        while (position != -1) {
+            stack.add(position);
             position = before[position];
+        }
+
+        while (!stack.isEmpty()) {
+            path.append(stack.pop()).append(' ');
         }
 
         System.out.println(path);

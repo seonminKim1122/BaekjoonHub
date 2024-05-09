@@ -12,12 +12,7 @@ class Solution {
             map.put(category, map.getOrDefault(category, 1) + 1);
         }
             
-        List<String> categories = new ArrayList<>();
-        for (String category: map.keySet()) {
-            categories.add(category);
-        }
-        
-        for (String category : categories) {
+        for (String category : map.keySet()) {
             answer *= map.get(category);
         }
         

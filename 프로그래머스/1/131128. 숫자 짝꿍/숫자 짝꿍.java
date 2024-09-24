@@ -13,16 +13,10 @@ class Solution {
         }
         
         int[] bucket = new int[10];
-        for (int i = 0; i < 10; i++) {
-            bucket[i] = Math.min(temp1[i], temp2[i]);
-        }
-        
         boolean hasPair = false;
         for (int i = 0; i < 10; i++) {
-            if (bucket[i] > 0) {
-                hasPair = true;
-                break;
-            }
+            bucket[i] = Math.min(temp1[i], temp2[i]);
+            if (bucket[i] > 0) hasPair = true;
         }
         
         if (!hasPair) return "-1";

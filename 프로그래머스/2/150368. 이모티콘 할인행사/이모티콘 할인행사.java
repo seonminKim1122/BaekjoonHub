@@ -33,21 +33,21 @@ class Solution {
         int[] result = new int[2];
         for (int i = 1; i <= 4; i++) {
             path[depth] = i * 10;
-            int[] temp = solve(depth + 1, emoticons, path, users);
-            if (temp[0] > result[0]) {
-                result[0] = temp[0];
-                result[1] = temp[1];
-            } else if(temp[0] == result[0]) {
-                if (temp[1] > result[1]) {
-                    result[0] = temp[0];
-                    result[1] = temp[1];
-                }
-            }
+            result = max(result, solve(depth + 1, emoticons, path, users));
             path[depth] = 0;
         }
         
         return result;
-    } 
+    }
+    
+    int[] max(int[] case1, int[] case2) {
+        if (case1[0] > case2[0]) return case1;
+        else if (case1[0] < case2[0]) return case2;
+        else {
+            if (case1[1] >= case2[1]) return case1;
+            else return case2;
+        }
+    }
 }
 
 /*

@@ -2,14 +2,27 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int n, int[] info) {
-        int[] answer = new int[11];
+        int[][] dp = new int[11][n + 1];
         
+        init(dp, info, n);
+        calc(dp, info, n);
+        
+        if (dp[10][0] <= 0) {
+            return new int[]{-1};
+        }
+        
+        int[] answer = new int[11];
+        trace(dp, info, n, answer);
+
+        return answer;
+    }
+    
+    void init(int[][] dp, int[] info, int n) {
         int apeach = 0;
         for (int i = 0; i < 11; i++) {
             if (info[i] > 0) apeach += (10 - i);
         }
         
-        int[][] dp = new int[11][n + 1];
         for (int j = 0; j <= n; j++) {
             dp[0][j] = -apeach;
         }
@@ -20,9 +33,10 @@ class Solution {
             } else {
                 dp[0][j] = -apeach + 10;
             }
-            
         }
-        
+    }
+    
+    void calc(int[][] dp, int[] info, int n) {
         for (int i = 1; i < 11; i++) {
             for (int j = 0; j <= n; j++) {
                 dp[i][j] = dp[i - 1][j];
@@ -35,11 +49,9 @@ class Solution {
                 }
             }
         }
-        
-        if (dp[10][0] <= 0) {
-            return new int[]{-1};
-        }
-        
+    }
+    
+    void trace(int[][] dp, int[] info, int n, int[] answer) {
         int remain = 0;
         for (int j = 0; j <= n; j++) {
             if (dp[10][j] >= dp[10][0]) remain = j;
@@ -62,7 +74,6 @@ class Solution {
             } 
         }
         answer[0] = n - remain;
-        return answer;
     }
 }
 

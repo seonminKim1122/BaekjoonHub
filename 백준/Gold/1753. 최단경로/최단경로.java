@@ -5,77 +5,70 @@ import java.util.*;
 
 public class Main {
 
-    static List<Node>[] graph;
-    static int[] dist;
-    static boolean[] visited;
-
-    static int V;
-    static int K;
+    static final int INF = 987654321;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        V = Integer.parseInt(st.nextToken()); // 정점의 개수
-        int E = Integer.parseInt(st.nextToken()); // 간선의 개수
-        K = Integer.parseInt(br.readLine()) - 1; // 시작 정점
+        int V = Integer.parseInt(st.nextToken());
+        int E = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(br.readLine()) - 1;
 
-        graph = new List[V];
-        for (int i = 0; i < V; i++) {
-            graph[i] = new ArrayList<>();
+        List<List<Node>> graph = new ArrayList<>();
+        for (int v = 0; v < V; v++) {
+            graph.add(new ArrayList<>());
         }
 
-        for (int i = 0; i < E; i++) {
+        for (int e = 0; e < E; e++) {
             st = new StringTokenizer(br.readLine());
 
-            int from = Integer.parseInt(st.nextToken()) - 1;
-            int to = Integer.parseInt(st.nextToken()) - 1;
-            int cost = Integer.parseInt(st.nextToken());
+            int u = Integer.parseInt(st.nextToken()) - 1;
+            int v = Integer.parseInt(st.nextToken()) - 1;
+            int w = Integer.parseInt(st.nextToken());
 
-            graph[from].add(new Node(to, cost));
+            graph.get(u).add(new Node(v, w));
         }
 
-        dist = new int[V];
-        visited = new boolean[V];
-        Arrays.fill(dist, 200001);
-        dist[K] = 0;
-
-        dijkstra2(K);
-        for (int i = 0; i < V; i++) {
-            System.out.println(dist[i] == 200001 ? "INF" : dist[i]);
-        }
-    }
-
-    public static void dijkstra2(int start) { // 우선순위 큐를 이용한 다익스트라
-        PriorityQueue<Node> priorityQueue = new PriorityQueue<>((o1, o2) -> o1.cost - o2.cost);
-        boolean[] visited = new boolean[V];
-
-        priorityQueue.add(new Node(start, 0));
-        visited[start] = true;
-        dist[start] = 0;
-
-        while (!priorityQueue.isEmpty()) {
-            Node now = priorityQueue.poll();
-
-            int from = now.to;
-
-            for (Node node : graph[from]) {
-                if (dist[node.to] > dist[from] + node.cost) {
-                    dist[node.to] = dist[from] + node.cost;
-                    priorityQueue.add(new Node(node.to, dist[node.to]));
-                }
+        int[] result = dijkstra(graph, K);
+        for (int i = 0; i < result.length; i++) {
+            if (result[i] >= INF) {
+                System.out.println("INF");
+            } else {
+                System.out.println(result[i]);
             }
         }
     }
-}
 
-class Node {
+    static int[] dijkstra(List<List<Node>> graph, int K) {
+        int[] dist = new int[graph.size()];
+        PriorityQueue<Node> pq = new PriorityQueue<>((n1, n2) -> dist[n1.vertex] - dist[n2.vertex]);
 
-    int to;
-    int cost;
+        Arrays.fill(dist, INF);
+        dist[K] = 0;
+        pq.add(new Node(K, 0)); // 시작 정점
 
-    Node (int to, int cost) {
-        this.to = to;
-        this.cost = cost;
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
+
+            for (Node node : graph.get(cur.vertex)) {
+                if (dist[node.vertex] > dist[cur.vertex] + node.weight) {
+                    dist[node.vertex] = dist[cur.vertex] + node.weight;
+                    pq.add(node);
+                }
+            }
+        }
+
+        return dist;
+    }
+
+    static class Node {
+        int vertex;
+        int weight;
+
+        Node(int vertex, int weight) {
+            this.vertex = vertex;
+            this.weight = weight;
+        }
     }
 }

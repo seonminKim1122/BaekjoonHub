@@ -11,7 +11,7 @@ class Solution {
         int before = 0;
         int answer = 0;
         while (done < total) {
-            while (idx < total && jobs[idx][0] < before) {
+            while (idx < total && jobs[idx][0] <= before) {
                 pq.add(jobs[idx++]);
             }
             
@@ -36,7 +36,7 @@ class Solution {
 
 0 3
 1 9
-6 6
+3 1
 
 0 3, 1 9, 6 6 => 
 */

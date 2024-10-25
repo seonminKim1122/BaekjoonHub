@@ -1,0 +1,5 @@
+-- 코드를 작성해주세요
+SELECT COUNT(*) AS "COUNT"
+FROM ECOLI_DATA
+WHERE FLOOR(GENOTYPE / 2) % 2 = 0 
+    AND (GENOTYPE % 2 = 1 OR FLOOR((GENOTYPE / 2) / 2) % 2 = 1);

@@ -1,5 +1,10 @@
-SELECT COUNT(T1.ID) AS FISH_COUNT, T2.FISH_NAME
-FROM FISH_INFO T1
-    JOIN FISH_NAME_INFO T2 ON T1.FISH_TYPE = T2.FISH_TYPE
-GROUP BY T2.FISH_NAME
+with test as (
+    select count(*) as FISH_COUNT, f2.fish_name as FISH_NAME
+    from fish_info as f1
+        join fish_name_info as f2
+            on f1.fish_type = f2.fish_type
+    group by f2.fish_name
+)
+SELECT FISH_COUNT, FISH_NAME
+FROM test
 ORDER BY FISH_COUNT DESC;

@@ -1,23 +1,29 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int A = sc.nextInt();
-        int B = sc.nextInt();
 
-        int greatestCommonFactor = getGreatestCommonFactor(A, B);
-        int leastCommonMultiple = getLeastCommonMultiple(A, B);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println(greatestCommonFactor);
-        System.out.println(leastCommonMultiple);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int A = Integer.parseInt(st.nextToken());
+        int B = Integer.parseInt(st.nextToken());
+
+        int gcd = GCD(A, B);
+        System.out.println(gcd);
+        System.out.println((A / gcd) * (B / gcd) * gcd);
     }
 
-    public static int getGreatestCommonFactor(int x, int y) {
-        if (x % y == 0) return y;
-        return getGreatestCommonFactor(y, x % y);
-    }
+    public static int GCD(int A, int B) {
+        if (B == 0) return A;
 
-    public static int getLeastCommonMultiple(int x, int y) {
-        return x * (y / getGreatestCommonFactor(x, y));
+        if (A < B) {
+            return GCD(B, A);
+        }
+
+        return GCD(B, A % B);
     }
 }

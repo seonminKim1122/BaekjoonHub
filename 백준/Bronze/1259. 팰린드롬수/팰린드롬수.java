@@ -1,37 +1,30 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        while (true) {
-            String num = br.readLine();
-            if (num.equals("0")) {
-                break;
-            }
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-            int[] numbers = Arrays.stream(num.split("")).mapToInt(Integer::parseInt).toArray();
+        String input;
+        loop: while (!(input = br.readLine()).equals("0")) {
+            int left = 0;
+            int right = input.length() - 1;
 
-            int size = numbers.length;
-            int mid = size / 2;
-            boolean yes = true;
-            for (int i = 0; i < mid; i++) {
-                if (numbers[i] != numbers[size - 1 - i]) {
-                    yes = false;
-                    break;
+            while (left <= right) {
+                if (input.charAt(left) != input.charAt(right)) {
+                    bw.write("no\n");
+                    continue loop;
                 }
+                left++;
+                right--;
             }
 
-            if (yes) {
-                sb.append("yes");
-            } else {
-                sb.append("no");
-            }
-            sb.append("\n");
+            bw.write("yes\n");
         }
-        System.out.println(sb);
+
+        bw.flush();
+        bw.close();
     }
+
 }

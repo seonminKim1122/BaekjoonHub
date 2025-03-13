@@ -1,46 +1,41 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Stack;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
 
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int T = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        for (int i = 0; i < T; i++) {
-            String[] PS = br.readLine().split("");
+        while (T > 0) {
+            String PS = br.readLine();
 
-            Stack<String> stack = new Stack<>();
-            boolean isVPS = true;
-            for (String parenthesis : PS) {
-                if (parenthesis.equals("(")) {
-                    stack.push(parenthesis);
+            Stack<Character> stack = new Stack<>();
+            boolean isValid = true;
+            for (char parenthesis: PS.toCharArray()) {
+                if (parenthesis == '(') {
+                    stack.add(parenthesis);
                 } else {
                     if (stack.isEmpty()) {
-                        isVPS = false;
-                        break;
+                        isValid = false;
                     } else {
                         stack.pop();
                     }
                 }
             }
 
-            if (!stack.isEmpty()) {
-                isVPS = false;
-            }
+            if (!stack.isEmpty()) isValid = false;
 
-            if (isVPS) {
-                sb.append("YES");
-            } else {
-                sb.append("NO");
-            }
-            sb.append("\n");
+            bw.write(isValid ? "YES" : "NO");
+            bw.write("\n");
+
+            T--;
         }
 
-        System.out.println(sb);
+        bw.flush();
+        bw.close();
+        br.close();
     }
 }

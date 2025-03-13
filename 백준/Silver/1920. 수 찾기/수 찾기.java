@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -13,23 +14,47 @@ public class Main {
         StringTokenizer st;
 
         int N = Integer.parseInt(br.readLine());
+        int[] A = new int[N];
         st = new StringTokenizer(br.readLine());
-
-        Set<Integer> numberSet = new HashSet<>();
         for (int i = 0; i < N; i++) {
-            numberSet.add(Integer.parseInt(st.nextToken()));
+            A[i] = Integer.parseInt(st.nextToken());
         }
+
+        // A 정렬
+        Arrays.sort(A);
 
         int M = Integer.parseInt(br.readLine());
         st = new StringTokenizer(br.readLine());
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for (int i = 0; i < M; i++) {
-            if (numberSet.contains(Integer.parseInt(st.nextToken()))) {
-                System.out.println(1);
+            int target = Integer.parseInt(st.nextToken());
+            bw.write(String.valueOf(isExist(target, A)));
+            bw.write("\n");
+        }
+
+        bw.flush();
+        bw.close();
+    }
+
+    private static int isExist(int target, int[] arr) {
+        // arr - must be sorted
+
+        int l = 0;
+        int r = arr.length - 1;
+
+        while (l <= r) {
+            int mid = (l + r) / 2;
+
+            if (arr[mid] < target) {
+                l = mid + 1;
+            } else if (arr[mid] > target) {
+                r = mid - 1;
             } else {
-                System.out.println(0);
+                return 1;
             }
         }
 
+        return 0;
     }
 
 }

@@ -1,14 +1,18 @@
-# [Silver V] 요세푸스 문제 0 - 11866 
+# [Silver IV] 요세푸스 문제 0 - 11866 
 
 [문제 링크](https://www.acmicpc.net/problem/11866) 
 
 ### 성능 요약
 
-메모리: 24248 KB, 시간: 176 ms
+메모리: 24912 KB, 시간: 148 ms
 
 ### 분류
 
-자료 구조(data_structures), 구현(implementation), 큐(queue)
+자료 구조, 구현, 큐
+
+### 제출 일자
+
+2025년 3월 15일 22:28:27
 
 ### 문제 설명
 

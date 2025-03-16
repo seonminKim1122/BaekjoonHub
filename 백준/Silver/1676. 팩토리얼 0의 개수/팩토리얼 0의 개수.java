@@ -1,25 +1,37 @@
-import java.math.BigInteger;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt();
-        BigInteger result = factorial(N);
 
-        BigInteger div = new BigInteger("10");
-        int cnt = 0;
-        while (result.remainder(div).equals(new BigInteger("0"))) {
-            cnt++;
-            div = div.multiply(new BigInteger("10"));
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+        int numOftwo = 0;
+        int numOfFive = 0;
+        while (N >= 0) {
+            numOftwo += calc(N, 2);
+            numOfFive += calc(N, 5);
+            N--;
         }
-        System.out.println(cnt);
+
+        System.out.println(Math.min(numOftwo, numOfFive));
     }
 
-    public static BigInteger factorial(int N) {
-        if (N <= 1) {
-            return new BigInteger("1");
+    public static int calc(int N, int target) {
+        if (N == 0) return 0;
+
+        int result = 0;
+        while (N % target == 0) {
+            result++;
+            N /= target;
         }
-        return factorial(N-1).multiply(new BigInteger(String.valueOf(N)));
+        return result;
     }
 }
+/*
+0의 개수 -> 소인수분해 했을 때 2^x * 5^y * ...?
+min(x, y) 가 0의 개수
+
+ */

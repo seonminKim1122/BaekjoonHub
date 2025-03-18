@@ -1,59 +1,55 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        boolean[] isMultipleOfThree = new boolean[3];
-        boolean[] isMultipleOfFive = new boolean[3];
-        
+
+        String input1 = br.readLine();
+        String input2 = br.readLine();
+        String input3 = br.readLine();
+
+        int num1 = fizzbuzzToInt(input1);
+        int num2 = fizzbuzzToInt(input2);
+        int num3 = fizzbuzzToInt(input3);
+        int max = Math.max(Math.max(num1, num2), num3);
+
         int target = 0;
-        for (int i = 0; i < 3; i++) {
-            String sequence = br.readLine();
-            
-            switch (sequence) {
-                case "FizzBuzz":
-                    isMultipleOfThree[i] = true;
-                    isMultipleOfFive[i] = true;
-                    break;
-                case "Fizz":
-                    isMultipleOfThree[i] = true;
-                    break;
-                case "Buzz":
-                    isMultipleOfFive[i] = true;
-                    break;
-                default:
-                    target = Integer.parseInt(sequence) - i;
-            }
-        }
-        
-        if (target == 0) {
-            target++;
-            while (!isAnswer(target, isMultipleOfThree, isMultipleOfFive)) {
-                target++;
-            }
-        }
-        
-        // 연속된 세 개의 문자열 다음
-        target += 3;
-        
-        if (target % 3 == 0 && target % 5 == 0) {
-            System.out.println("FizzBuzz");
-        } else if (target % 3 == 0 && target % 5 != 0) {
-            System.out.println("Fizz");
-        } else if (target % 3 != 0 && target % 5 == 0) {
-            System.out.println("Buzz");
+        if (max == num1) {
+            target = num1 + 3;
+        } else if (max == num2) {
+            target = num2 + 2;
         } else {
-            System.out.println(target);
+            target = num3 + 1;
+        }
+
+        System.out.println(intToFizzBuzz(target));
+    }
+
+    private static String intToFizzBuzz(int number) {
+        if (number % 3 == 0 && number % 5 == 0) {
+            return "FizzBuzz";
+        } else if (number % 3 == 0) {
+            return "Fizz";
+        } else if (number % 5 == 0) {
+            return "Buzz";
+        } else {
+            return String.valueOf(number);
         }
     }
-    
-    public static boolean isAnswer(int i, boolean[] isMultipleOfThree, boolean[] isMultipleOfFive) {
-        for (int k = 0; k < 3; k++) {
-            if (((i + k) % 3 == 0) != isMultipleOfThree[k]) return false;
-            if (((i + k) % 5 == 0) != isMultipleOfFive[k]) return false;
+
+    private static int fizzbuzzToInt(String input) {
+        switch (input) {
+            case "FizzBuzz":
+            case "Fizz":
+            case "Buzz":
+                return 0;
+            default:
+                return Integer.parseInt(input);
         }
-        return true;
     }
+
+
 }

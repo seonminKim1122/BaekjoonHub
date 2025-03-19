@@ -1,39 +1,32 @@
-import java.io.*;
-public class Main {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
 
-    static int[] stack = new int[100000];
-    static int top = -1;
+public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
 
         int K = Integer.parseInt(br.readLine());
+        Stack<Integer> stack = new Stack<>();
+        int result = 0;
+
         for (int i = 0; i < K; i++) {
-            int N = Integer.parseInt(br.readLine());
-            if (N == 0) {
-                pop();
+            int v = Integer.parseInt(br.readLine());
+
+            if (v == 0) {
+                result -= stack.pop();
             } else {
-                push(N);
+                stack.add(v);
+                result += v;
             }
         }
 
-        int result = 0;
-        for (int num : stack) {
-            result += num;
-        }
-        bw.write(result + "\n");
-        bw.flush();
-        bw.close();
-        br.close();
+        System.out.println(result);
     }
 
-    public static void push(int X) {
-        stack[++top] = X;
-    }
 
-    public static void pop() {
-        stack[top--] = 0;
-    }
 
 }

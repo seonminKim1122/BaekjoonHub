@@ -1,7 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -9,25 +8,30 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
+        // N: 저장된 사이트 주소 수
+        // M: 비밀번호를 찾으려는 사이트 주소 수
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        HashMap<String, String> cheatSheet = new HashMap<>();
+        Map<String, String> infoMap = new HashMap<>();
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
 
-            String url = st.nextToken();
+            String uri = st.nextToken();
             String password = st.nextToken();
 
-            cheatSheet.put(url, password);
+            infoMap.put(uri, password);
         }
 
-        StringBuilder answer = new StringBuilder();
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         for (int i = 0; i < M; i++) {
-            String url = br.readLine();
-            answer.append(cheatSheet.get(url)).append("\n");
+            String uri = br.readLine();
+            bw.write(infoMap.get(uri));
+            bw.write("\n");
         }
 
-        System.out.println(answer);
+        bw.flush();
+        bw.close();
+        br.close();
     }
 }

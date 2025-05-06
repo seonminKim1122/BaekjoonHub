@@ -1,39 +1,58 @@
 import java.io.*;
 
 public class Main {
-
-    static int[] dp = new int[41];
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        // 기본값 셋팅
-        dp[0] = 1;
-        dp[1] = 1;
 
         int T = Integer.parseInt(br.readLine());
-        for (int i = 0; i < T; i++) {
+        for (int t = 0; t < T; t++) {
             int N = Integer.parseInt(br.readLine());
+            int[] cnt0 = new int[N + 1]; // cnt0[i]: fibo(i) 의 0 출력횟수
+            int[] cnt1 = new int[N + 1]; // cnt1[i]: fibo(i) 의 1 출력횟수
+            fibo0(N, cnt0);
+            fibo1(N, cnt1);
 
-            if (N == 0) {
-                bw.write("1 0\n");
-            } else if (N == 1) {
-                bw.write("0 1\n");
-            } else {
-                bw.write(fibo(N-2) + " " + fibo(N-1) + "\n");
-            }
+            bw.write(cnt0[N] + " " + cnt1[N]);
+            bw.write("\n");
         }
+
         bw.flush();
         bw.close();
         br.close();
     }
 
-    static int fibo(int N) {
-        if (dp[N] > 0) {
-            return dp[N];
+    private static void fibo0(int N, int[] cnt0) {
+        if (N == 1) return;
+        if (N == 0) {
+            cnt0[0]++;
+            return;
         }
 
-        dp[N] = fibo(N-1) + fibo(N-2);
-        return dp[N];
+        if (cnt0[N - 1] == 0) {
+            fibo0(N - 1, cnt0);
+        }
+        if (cnt0[N - 2] == 0) {
+            fibo0(N - 2, cnt0);
+        }
+
+        cnt0[N] = cnt0[N - 1] + cnt0[N - 2];
+    }
+
+    private static void fibo1(int N, int[] cnt1) {
+        if (N == 0) return;
+        if (N == 1) {
+            cnt1[1]++;
+            return;
+        }
+
+        if (cnt1[N - 1] == 0) {
+            fibo1(N - 1, cnt1);
+        }
+        if (cnt1[N - 2] == 0) {
+            fibo1(N - 2, cnt1);
+        }
+
+        cnt1[N] = cnt1[N - 1] + cnt1[N - 2];
     }
 }

@@ -9,19 +9,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
-        int[] times = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
+        int[] P = new int[N];
         for (int i = 0; i < N; i++) {
-            times[i] = Integer.parseInt(st.nextToken());
+            P[i] = Integer.parseInt(st.nextToken());
         }
 
-        Arrays.sort(times);
+        /*
+        각 사람이 돈을 인출하는데 필요한 시간을 최소화 하려면
+        걸리는 시간이 적은 사람부터 돈을 인출해야한다.
+         */
+        Arrays.sort(P);
 
-        int result = 0;
+        int answer = 0;
+        int time = 0;
         for (int i = 0; i < N; i++) {
-            result += times[i] * (N-i);
+            time += P[i];
+            answer += time;
         }
 
-        System.out.println(result);
+        System.out.println(answer);
     }
+
 }

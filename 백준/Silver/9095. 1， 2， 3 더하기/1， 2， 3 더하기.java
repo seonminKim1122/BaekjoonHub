@@ -1,26 +1,40 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int T = Integer.parseInt(br.readLine());
 
-        int[] dp = new int[11];
-        dp[0] = 1;
-        dp[1] = 1;
-        dp[2] = 2;
-        for (int i = 3; i <= 10; i++) {
-            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < T; i++) {
+        while (T > 0) {
             int n = Integer.parseInt(br.readLine());
-            sb.append(dp[n]).append("\n");
+
+            if (n == 1) {
+                bw.write("1");
+                bw.write("\n");
+                T--;
+                continue;
+            }
+
+            int[] dp = new int[n + 1];
+            dp[0] = 1;
+            dp[1] = 1;
+            dp[2] = 2;
+
+            for (int i = 3; i <= n; i++) {
+                dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+            }
+
+
+            bw.write(String.valueOf(dp[n]));
+            bw.write("\n");
+
+            T--;
         }
 
-        System.out.println(sb);
+        bw.flush();
+        bw.close();
+        br.close();
     }
+
 }

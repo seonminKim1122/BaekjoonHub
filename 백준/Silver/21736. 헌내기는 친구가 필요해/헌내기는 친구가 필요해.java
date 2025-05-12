@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -9,58 +7,58 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        int[][] campus = new int[N][M];
-        boolean[][] visited = new boolean[N][M];
-        Queue<int[]> queue = new LinkedList<>();
-        Queue<int[]> people = new LinkedList<>();
-        for (int i = 0; i < N; i++) {
-            String[] temp = br.readLine().split("");
-            for (int j = 0; j < M; j++) {
-                if(temp[j].equals("X")) {
-                    campus[i][j] = 0;
-                } else {
-                    campus[i][j] = 1;
-                    if (temp[j].equals("P")) {
-                        people.add(new int[]{i, j});
-                    } else if (temp[j].equals("I")) {
-                        queue.add(new int[]{i, j});
-                        visited[i][j] = true;
-                    }
+        char[][] campus = new char[N][M];
+
+        int startY = -1;
+        int startX = -1;
+        for (int y = 0; y < N; y++) {
+            String info = br.readLine();
+            for (int x = 0; x < M; x++) {
+                campus[y][x] = info.charAt(x);
+                if (campus[y][x] == 'I') {
+                    startY = y;
+                    startX = x;
                 }
             }
         }
 
-        int[] dx = {0, 0, -1, 1};
-        int[] dy = {-1, 1, 0, 0};
+        int[] dy = {0, 1, 0, -1};
+        int[] dx = {1, 0, -1, 0};
+        int cnt = 0;
+
+        Queue<int[]> queue = new LinkedList<>();
+        boolean[][] visit = new boolean[N][M];
+        queue.add(new int[]{startY, startX});
+        visit[startY][startX] = true;
+
         while (!queue.isEmpty()) {
-            int[] temp = queue.remove();
+            int[] now = queue.poll();
 
-            for (int i = 0; i < 4; i++) {
-                int x = temp[0] + dx[i];
-                int y = temp[1] + dy[i];
+            for (int d = 0; d < 4; d++) {
+                int ny = now[0] + dy[d];
+                int nx = now[1] + dx[d];
 
-                if (x < 0 || y < 0 || x >= N || y >= M || visited[x][y] || campus[x][y] == 0) continue;
+                if (ny < 0 || nx < 0 || ny >= N || nx >= M) continue;
+                if (visit[ny][nx]) continue;
+                if (campus[ny][nx] == 'X') continue;
 
-                queue.add(new int[]{x, y});
-                visited[x][y] = true;
+                queue.add(new int[]{ny, nx});
+                visit[ny][nx] = true;
+                if (campus[ny][nx] == 'P') {
+                    cnt++;
+                }
             }
         }
 
-        int result = 0;
-        while (!people.isEmpty()) {
-            int[] xy = people.remove();
-            if (visited[xy[0]][xy[1]]) {
-                result++;
-            }
-        }
-
-        if (result == 0) {
+        if (cnt == 0) {
             System.out.println("TT");
         } else {
-            System.out.println(result);
+            System.out.println(cnt);
         }
     }
+
 }

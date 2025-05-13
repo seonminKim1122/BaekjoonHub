@@ -4,39 +4,37 @@ import java.io.InputStreamReader;
 import java.util.PriorityQueue;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>((i1, i2) -> {
+            if (Math.abs(i1) == Math.abs(i2)) {
+                return i1 - i2;
+            } else {
+                return Math.abs(i1) - Math.abs(i2);
+            }
+        });
 
         int N = Integer.parseInt(br.readLine());
+        StringBuilder answer = new StringBuilder();
+        while (N > 0) {
+            N--;
 
-        PriorityQueue<Integer> heap = new PriorityQueue<>(
-                (o1, o2) -> {
-                    if (Math.abs(o1) == Math.abs(o2)) {
-                        return o1 - o2;
-                    } else {
-                        return Math.abs(o1) - Math.abs(o2);
-                    }
-                }
-        );
-
-        for (int i = 0; i < N; i++) {
             int x = Integer.parseInt(br.readLine());
-            
-            if (x != 0) { // 배열에 x 라는 값을 추가
-                heap.add(x);
-            } else { // 절대값이 가장 작은 값을 출력하고 그 값을 배열에서 제거
-                Integer temp = heap.poll();
-                if (temp == null) {
-                    sb.append(0);
+
+            if (x != 0) {
+                pq.add(x);
+            } else {
+                if (pq.isEmpty()) {
+                    answer.append(0);
                 } else {
-                    sb.append(temp);
+                    answer.append(pq.poll());
                 }
-                sb.append("\n");
+                answer.append("\n");
             }
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
+
 }

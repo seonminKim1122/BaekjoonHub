@@ -1,55 +1,85 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         int M = Integer.parseInt(br.readLine());
-        Set<Integer> S = new HashSet<>();
-        StringBuilder sb = new StringBuilder();
+        MySet set = new MySet();
+        StringBuilder answer = new StringBuilder();
+        while (M > 0) {
+            M--;
 
-        for (int i = 0; i < M; i++) {
-            String[] orders = br.readLine().split(" ");
-            int x = 0;
-            if (orders.length > 1) {
-                x = Integer.parseInt(orders[1]);
+            String[] order = br.readLine().split(" ");
+
+            String operation = order[0];
+            int x = -1;
+            if (order.length >= 2) {
+                x = Integer.parseInt(order[1]);
             }
-
-            switch (orders[0]) {
+            switch (operation) {
                 case "add":
-                    S.add(x);
+                    set.add(x);
                     break;
                 case "remove":
-                    S.remove(x);
+                    set.remove(x);
+                    break;
+                case "check":
+                    answer.append(set.check(x));
+                    answer.append("\n");
                     break;
                 case "toggle":
-                    if (S.contains(x)) {
-                        S.remove(x);
-                    } else {
-                        S.add(x);
-                    }
+                    set.toggle(x);
                     break;
                 case "all":
-                    S.clear();
-                    for (int j = 1; j <= 20; j++) {
-                        S.add(j);
-                    }
-                    break;
-                case "empty":
-                    S.clear();
+                    set.all();
                     break;
                 default:
-                    if (S.contains(x)) {
-                        sb.append("1\n");
-                    } else {
-                        sb.append("0\n");
-                    }
+                    set.empty();
             }
         }
-        System.out.println(sb);
+
+        System.out.println(answer);
+    }
+
+    static class MySet {
+        Set<Integer> set = new HashSet<>();
+
+        MySet(){}
+
+        void add(int x) {
+            set.add(x);
+        }
+
+        void remove(int x) {
+            set.remove(x);
+        }
+
+        int check(int x) {
+            return set.contains(x) ? 1 : 0;
+        }
+
+        void toggle(int x) {
+            if (!set.contains(x)) {
+                set.add(x);
+            } else {
+                set.remove(x);
+            }
+        }
+
+        void all() {
+            empty();
+            for (int i = 1; i <= 20; i++) {
+                set.add(i);
+            }
+        }
+
+        void empty() {
+            set.clear();
+        }
     }
 }

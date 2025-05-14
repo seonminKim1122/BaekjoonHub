@@ -10,38 +10,35 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken()); // 도감에 수록된 포켓몬의 수
+        int M = Integer.parseInt(st.nextToken()); // 맞춰야 하는 문제의 개수
 
-        Map<String, Integer> map1 = new HashMap<>();
-        Map<Integer, String> map2 = new HashMap<>();
-        for (int i = 0; i < N; i++) {
+        Map<Integer, String> guide1 = new HashMap<>();
+        Map<String, Integer> guide2 = new HashMap<>();
+        for (int i = 1; i <= N; i++) {
             String pokemon = br.readLine();
-            map1.put(pokemon, i+1);
-            map2.put(i+1, pokemon);
+            guide1.put(i, pokemon);
+            guide2.put(pokemon, i);
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder answer = new StringBuilder();
         for (int i = 0; i < M; i++) {
-            String input = br.readLine();
-            if (canBeInteger(input)) {
-                sb.append(map2.get(Integer.parseInt(input))).append("\n");
+            String quiz = br.readLine();
+            if (isNumber(quiz)) {
+                answer.append(guide1.get(Integer.parseInt(quiz)));
             } else {
-                sb.append(map1.get(input)).append("\n");
+                answer.append(guide2.get(quiz));
             }
+            answer.append("\n");
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
-    
-    public static boolean canBeInteger(String input) {
 
+    private static boolean isNumber(String input) {
         for (char c : input.toCharArray()) {
-            if (c < '0' || c > '9') {
-                return false;
-            }
+            if (!('0' <= c && c <= '9')) return false;
         }
-        
         return true;
     }
 }

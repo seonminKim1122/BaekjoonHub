@@ -9,23 +9,21 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        int money = Integer.parseInt(st.nextToken());
 
-        int[] coins = new int[N];
+        int[] A = new int[N];
         for (int i = 0; i < N; i++) {
-            int coin = Integer.parseInt(br.readLine());
-            coins[(N-1)-i] = coin;
+            A[i] = Integer.parseInt(br.readLine());
         }
 
-        int result = 0;
-        int i = 0;
-        while (K > 0) {
-            int coin = coins[i++];
-            int cnt = K / coin;
-            result += cnt;
-            K -= coin * (cnt);
+        int answer = 0;
+        for (int i = N - 1; i >= 0; i--) {
+            answer = answer + (money / A[i]);
+            money = money % A[i];
+
+            if (money == 0) break;
         }
 
-        System.out.println(result);
+        System.out.println(answer);
     }
 }

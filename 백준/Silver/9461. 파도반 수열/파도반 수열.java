@@ -1,31 +1,30 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int T = Integer.parseInt(br.readLine());
-        // 초기값 셋팅
-        long[] dp = new long[101];
-        dp[1] = 1;
-        dp[2] = 1;
-        dp[3] = 1;
-        dp[4] = 2;
-        int last = 4;
 
-        for (int i = 0; i < T; i++) {
-            int N = Integer.parseInt(br.readLine());
-
-            if (dp[N] == 0) {
-                // dp[N] = dp[N-1] + dp[N-5];
-                for (int j = last+1; j < N+1; j++) {
-                    dp[j] = dp[j-1] + dp[j-5];
-                }
-                last = N;
-            }
-            bw.write(dp[N] + "\n");
+        // 수열의 관계: An = An-1 + An-5
+        long[] sequence = new long[101];
+        sequence[1] = 1;
+        sequence[2] = 1;
+        sequence[3] = 1;
+        sequence[4] = 2;
+        for (int i = 5; i <= 100; i++) {
+            sequence[i] = sequence[i - 1] + sequence[i - 5];
         }
-        bw.flush();
-        bw.close();
-        br.close();
+
+        int T = Integer.parseInt(br.readLine());
+        StringBuilder answer = new StringBuilder();
+        while (T > 0) {
+            T--;
+
+            int N = Integer.parseInt(br.readLine());
+            answer.append(sequence[N]).append("\n");
+        }
+
+        System.out.println(answer);
     }
 }

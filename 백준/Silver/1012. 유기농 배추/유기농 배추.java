@@ -5,64 +5,61 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int M;
-    static int N;
-
-    static boolean[][] visited;
-    static int[][] cabbageField;
-
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
 
         int T = Integer.parseInt(br.readLine());
-        for (int t = 0; t < T; t++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder answer = new StringBuilder();
+        while (T > 0) {
+            T--;
 
-            M = Integer.parseInt(st.nextToken());
-            N = Integer.parseInt(st.nextToken());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int M = Integer.parseInt(st.nextToken());
+            int N = Integer.parseInt(st.nextToken());
             int K = Integer.parseInt(st.nextToken());
 
-            cabbageField = new int[N][M];
-            visited = new boolean[N][M];
-            for (int i = 0; i < K; i++) {
+            int[][] land = new int[N][M];
+            for (int k = 0; k < K; k++) {
                 st = new StringTokenizer(br.readLine());
 
                 int X = Integer.parseInt(st.nextToken());
                 int Y = Integer.parseInt(st.nextToken());
 
-                cabbageField[Y][X] = 1;
+                land[Y][X] = 1;
             }
 
-            int cnt = 0;
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    if (cabbageField[i][j] == 1 && !visited[i][j]) {
-                        dfs(i, j);
-                        cnt++;
-                    }
+            int result = 0;
+            for (int y = 0; y < N; y++) {
+                for (int x = 0; x < M; x++) {
+                    if (land[y][x] == 0) continue;
+
+                    dfs(land, y, x, N, M);
+                    result++;
                 }
             }
 
-            sb.append(cnt).append("\n");
+            answer.append(result).append("\n");
         }
 
-        System.out.println(sb);
+        System.out.println(answer) ;
     }
 
-    public static void dfs(int i, int j) {
-        visited[i][j] = true;
+    public static void dfs(int[][] land, int y, int x, int N, int M) {
+        land[y][x] = 0;
+
+        int[] dy = {-1, 1, 0, 0};
+        int[] dx = {0, 0, -1, 1};
 
         for (int k = 0; k < 4; k++) {
-            int x = i + dx[k];
-            int y = j + dy[k];
+            int ny = y + dy[k];
+            int nx = x + dx[k];
 
-            if (x < 0 || y < 0 || x >= N || y >= M || visited[x][y] || cabbageField[x][y] != 1) continue;
+            if (ny < 0 || nx < 0 || ny >= N || nx >= M) {
+                continue;
+            }
+            if (land[ny][nx] == 0) continue;
 
-            dfs(x, y);
+            dfs(land, ny, nx, N, M);
         }
     }
 }

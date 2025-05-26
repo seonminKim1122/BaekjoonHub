@@ -4,42 +4,41 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
 
-        StringTokenizer st2 = new StringTokenizer(br.readLine());
         int[] trees = new int[N];
-        int start = 0;
-        int end = 0;
+        st = new StringTokenizer(br.readLine());
+        long start = 0;
+        long end = 0;
         for (int i = 0; i < N; i++) {
-            trees[i] = Integer.parseInt(st2.nextToken());
-            if (end < trees[i]) {
-                end = trees[i];
-            }
+            trees[i] = Integer.parseInt(st.nextToken());
+            end = Math.max(end, trees[i]);
         }
 
+        long answer = 0;
         while (start <= end) {
-            int mid = (int) Math.ceil((double)(start + end) / 2);
+            long H = (start + end) / 2;
 
-            long length = 0;
-            for(int tree : trees) {
-                if (tree - mid > 0) {
-                    length += tree - mid;
-                }
+            long temp = 0;
+            for (int i = 0; i < N; i++) {
+                temp += Math.max(0, trees[i] - H);
             }
 
-            if (length < M) {
-                end = mid - 1;
+            if (temp >= M) {
+                start = H + 1;
+                answer = H;
             } else {
-                start = mid + 1;
+                end = H - 1;
             }
         }
 
-        System.out.println(start - 1);
+        System.out.println(answer);
     }
+
 }

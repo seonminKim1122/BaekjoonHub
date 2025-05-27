@@ -4,42 +4,43 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer temp = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(temp.nextToken());
-        int M = Integer.parseInt(temp.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        boolean[][] graph = new boolean[N+1][N+1];
-        boolean[] visited = new boolean[N+1];
+        int N = Integer.parseInt(st.nextToken()); // 정점의 개수
+        int M = Integer.parseInt(st.nextToken()); // 간선의 개수
 
-        for (int i = 0; i < M; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int node1 = Integer.parseInt(st.nextToken());
-            int node2 = Integer.parseInt(st.nextToken());
+        int[][] graph = new int[N][N];
+        for (int m = 0; m < M; m++) {
+            st = new StringTokenizer(br.readLine());
 
-            graph[node1][node2] = true;
-            graph[node2][node1] = true;
+            int u = Integer.parseInt(st.nextToken()) - 1;
+            int v = Integer.parseInt(st.nextToken()) - 1;
+
+            graph[u][v] = 1;
+            graph[v][u] = 1;
         }
 
-        int result = 0;
-        for (int i = 1; i < N+1; i++) {
-            if (!visited[i]) {
-                dfs(i, visited, graph);
-                result++;
-            }
+        boolean[] visit = new boolean[N];
+        int answer = 0;
+        for (int from = 0; from < N; from++) {
+            if (visit[from]) continue;
+            dfs(graph, N, from, visit);
+            answer++;
         }
-        System.out.println(result);
+
+        System.out.println(answer);
     }
 
-    public static void dfs(int from, boolean[] visited, boolean[][] map) {
-        visited[from] = true;
-        int len = visited.length;
+    private static void dfs(int[][] graph, int N, int from, boolean[] visit) {
 
-        for (int i = 1; i < len; i++) {
-            if (map[from][i] && !visited[i]) {
-                dfs(i, visited, map);
-            }
+        for (int to = 0; to < N; to++) {
+            if (graph[from][to] == 0 || visit[to]) continue;
+
+            visit[to] = true;
+            dfs(graph, N, to, visit);
         }
     }
 }

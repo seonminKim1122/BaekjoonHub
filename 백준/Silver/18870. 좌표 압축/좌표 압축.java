@@ -1,33 +1,51 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+
+        int N = Integer.parseInt(br.readLine()); // 정점의 개수
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int[] origin = new int[N];
+        Point[] points = new Point[N];
         for (int i = 0; i < N; i++) {
-            origin[i] = Integer.parseInt(st.nextToken());
+            points[i] = new Point(Integer.parseInt(st.nextToken()), i);
         }
 
-        int[] sorted = origin.clone();
-        Arrays.sort(sorted);
+        Arrays.sort(points);
 
-        Map<Integer, Integer> map = new HashMap<>();
-        int rank = -1;
-        for(int num : sorted) {
-            rank = map.getOrDefault(num, -1) == -1 ? rank + 1 : rank;
-            map.put(num, rank);
+        int[] suppressed = new int[N];
+        for (int i = 1; i < N; i++) {
+            if (points[i].value == points[i - 1].value) {
+                suppressed[points[i].index] = suppressed[points[i - 1].index];
+            } else {
+                suppressed[points[i].index] = suppressed[points[i - 1].index] + 1;
+            }
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int num : origin) {
-            sb.append(map.get(num)).append(" ");
+        StringBuilder answer = new StringBuilder();
+        for (int i = 0; i < N; i++) {
+            answer.append(suppressed[i]).append(" ");
         }
-        System.out.println(sb);
+
+        System.out.println(answer);
+    }
+
+    static class Point implements Comparable<Point> {
+        int value;
+        int index;
+
+        Point(int value, int index) {
+            this.value = value;
+            this.index = index;
+        }
+
+        public int compareTo(Point other) {
+            return this.value - other.value;
+        }
     }
 }

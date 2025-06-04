@@ -1,26 +1,28 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
 
-        int[] dp = new int[n+1];
+        int[] dp = new int[50001];
+        Arrays.fill(dp, 50001);
 
-        for (int i = 1; i <= n; i++) {
-            double sqrt = Math.sqrt(i);
-            if ((int)sqrt == sqrt) {
-                dp[i] = 1;
-            } else {
-                dp[i] = dp[i - 1] + dp[1];
-                for (int j = 2; j <= sqrt; j++) {
-                    dp[i] = Math.min(dp[i - j * j] + dp[j * j], dp[i]);
-                }
-            }
+        for (int i = 1; i <= 223; i++) {
+            dp[i * i] = 1;
         }
 
+        for (int i = 1; i <= 50000; i++) {
+            for (int j = 1; j * j < i; j++) {
+                dp[i] = Math.min(dp[i - j * j] + dp[j * j], dp[i]);
+            }
+        }
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
         System.out.println(dp[n]);
     }
+
 }

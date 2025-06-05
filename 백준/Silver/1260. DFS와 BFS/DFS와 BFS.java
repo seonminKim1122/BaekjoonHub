@@ -7,10 +7,10 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static StringBuilder dfsSb = new StringBuilder();
-    static StringBuilder bfsSb = new StringBuilder();
+    static StringBuilder answer = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -18,52 +18,51 @@ public class Main {
         int M = Integer.parseInt(st.nextToken());
         int V = Integer.parseInt(st.nextToken());
 
-        int[][] graph = new int[N+1][N+1];
-        boolean[] dfsVisited = new boolean[N+1];
-        boolean[] bfsVisited = new boolean[N+1];
-        for (int i = 1; i <= M; i++) {
-            StringTokenizer temp = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(temp.nextToken());
-            int to = Integer.parseInt(temp.nextToken());
-            graph[from][to] = 1;
-            graph[to][from] = 1;
+        int[][] graph = new int[N + 1][N + 1];
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int v1 = Integer.parseInt(st.nextToken());
+            int v2 = Integer.parseInt(st.nextToken());
+
+            graph[v1][v2] = graph[v2][v1] = 1;
         }
 
-        dfs(graph, dfsVisited, V);
-        System.out.println(dfsSb);
+        boolean[] visit = new boolean[N + 1];
+        dfs(V, graph, visit, N);
+        answer.append("\n");
+        bfs(V, graph, N);
 
-        bfs(graph, bfsVisited, V);
-        System.out.println(bfsSb);
+        System.out.println(answer);
     }
 
-    public static void dfs(int[][] graph, boolean[] visited, int from) {
-        if (visited[from]) {
-            return;
-        }
+    private static void dfs(int from, int[][] graph, boolean[] visit, int N) {
+        visit[from] = true;
+        answer.append(from).append(" ");
 
-        visited[from] = true;
-        dfsSb.append(from).append(" ");
-        for (int to = 1; to < graph[from].length; to++) {
-            if (graph[from][to] == 1) {
-                dfs(graph, visited, to);
-            }
+        for (int to = 1; to <= N; to++) {
+            if (visit[to] || graph[from][to] != 1) continue;
+            dfs(to, graph, visit, N);
         }
     }
 
-    public static void bfs(int[][] graph, boolean[] visited, int V) {
+    private static void bfs(int start, int[][] graph, int N) {
+
         Queue<Integer> queue = new LinkedList<>();
-        queue.add(V);
+        boolean[] visit = new boolean[N + 1];
+        queue.add(start);
+        visit[start] = true;
+        answer.append(start);
 
         while (!queue.isEmpty()) {
-            int from = queue.remove();
-            if (!visited[from]) {
-                visited[from] = true;
-                bfsSb.append(from).append(" ");
-                for (int to = 1; to < graph[from].length; to++) {
-                    if (graph[from][to] == 1 && !visited[to]) {
-                        queue.add(to);
-                    }
-                }
+            int from = queue.poll();
+
+            for (int to = 1; to <= N; to++) {
+                if (visit[to] || graph[from][to] != 1) continue;
+
+                queue.add(to);
+                visit[to] = true;
+                answer.append(" ").append(to);
             }
         }
     }

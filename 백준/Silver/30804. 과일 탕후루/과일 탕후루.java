@@ -1,53 +1,49 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    
+
     public static void main(String[] args) throws IOException {
-        // 5 5 5 1 1 1 1 2 1
-        // 양쪽에서 더 남은 갯수가 작은 것부터 빼는 그리디 => fail
-        // N 은 최대 200,000 이므로 완탐 시간 초과
-        // 입력된 수열에서 (과일 종류가 2개 이하인) 가장 긴 연속된 부분 수열 찾기
-        
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
-        int N = Integer.parseInt(br.readLine());
+
+        int N = Integer.parseInt(br.readLine()); // 과일의 갯수
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
         int[] tanghuru = new int[N];
         for (int i = 0; i < N; i++) {
             tanghuru[i] = Integer.parseInt(st.nextToken());
         }
-        
+
         int start = 0;
         int end = 0;
-        int[] numOfFruits = new int[10];
-        numOfFruits[tanghuru[start]]++;
-        int types = 1;
-        
+
+        int[] fruitCnt = new int[10];
+        fruitCnt[tanghuru[0]]++;
+        int fruitTypes = 1;
         int answer = 1;
-        while (start < N && end < N) {
-            if (types <= 2) {
+        while (true) {
+
+            if (fruitTypes <= 2) { // 과일 종류가 두 종류 이하
                 answer = Math.max(answer, end - start + 1);
-                
                 end++;
-                if (end >= N) break;
-                
-                if (numOfFruits[tanghuru[end]] == 0) {
-                    types++;
+                if (end == N) break;
+
+                fruitCnt[tanghuru[end]]++;
+                if (fruitCnt[tanghuru[end]] == 1) {
+                    fruitTypes++;
                 }
-                numOfFruits[tanghuru[end]]++;
-            } else {
-                numOfFruits[tanghuru[start]]--;
-                if (numOfFruits[tanghuru[start]] == 0) {
-                    types--;
+
+            } else { // 과일 종류가 두 종류 초과
+                fruitCnt[tanghuru[start]]--;
+                if (fruitCnt[tanghuru[start]] == 0) {
+                    fruitTypes--;
                 }
-                
                 start++;
             }
         }
-        
+
         System.out.println(answer);
     }
-    
 }

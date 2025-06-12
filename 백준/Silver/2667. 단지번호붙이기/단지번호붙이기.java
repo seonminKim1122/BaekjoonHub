@@ -1,75 +1,70 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Main {
-    
-    static int[][] graph;
-    static int house = 0;
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-    static int N;
-    
+
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-        N = Integer.parseInt(br.readLine());
-        graph = new int[N][N];
+        int[][] map = new int[N][N];
         for (int i = 0; i < N; i++) {
-            String line = br.readLine();
+            char[] line = br.readLine().toCharArray();
             for (int j = 0; j < N; j++) {
-                graph[i][j] = line.charAt(j) - '0';
+                map[i][j] = line[j] - '0';
             }
         }
 
-        int cnt = 0;
-        List<Integer> houses = new ArrayList<>();
+        List<Integer> answer = new ArrayList<>();
+        boolean[][] visit = new boolean[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (graph[i][j] == 1) {
-                    house = 0;
-                    cnt++;
-                    dfs(i, j);
-                    houses.add(house);
-                }
+                if (visit[i][j] || map[i][j] == 0) continue;
+
+                answer.add(bfs(visit, map, i, j, N));
             }
         }
 
-        Collections.sort(houses);
+        Collections.sort(answer);
 
-        StringBuilder answer = new StringBuilder();
-        answer.append(cnt).append('\n');
-        for (int i = 0; i < houses.size(); i++) {
-            answer.append(houses.get(i)).append('\n');
+        StringBuilder result = new StringBuilder();
+        result.append(answer.size());
+        for (int num : answer) {
+            result.append("\n").append(num);
         }
 
-        System.out.println(answer);
+        System.out.println(result);
     }
 
-    static void dfs(int i, int j) {
-        graph[i][j] = 0;
-        house++;
+    private static int bfs(boolean[][] visit, int[][] map, int i, int j, int N) {
+        int result = 0;
 
-        for (int k = 0; k < 4; k++) {
-            int nx = i + dx[k];
-            int ny = j + dy[k];
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{i, j});
+        visit[i][j] = true;
+        result++;
 
-            if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-            if (graph[nx][ny] == 0) continue;
+        int[] dy = {-1, 1, 0, 0};
+        int[] dx = {0, 0, -1, 1};
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
 
-            dfs(nx, ny);
+            for (int k = 0; k < 4; k++) {
+                int ny = now[0] + dy[k];
+                int nx = now[1] + dx[k];
+
+                if (ny < 0 || nx < 0 || ny >= N || nx >= N) continue;
+                if (visit[ny][nx] || map[ny][nx] == 0) continue;
+
+                queue.add(new int[]{ny, nx});
+                visit[ny][nx] = true;
+                result++;
+            }
         }
+
+        return result;
     }
 }
-/*
-의사코드
-1. 집이 있는 곳에서 dfs() 수행해서 같은 단지의 집을 모두 탐색
-2. 단지 내 집 탐색 때마다 카운팅 하여 단지 내 집의 수 파악
-3. 전체 배열에 대해 해당 과정을 반복하고 dfs() 가 몇 번 수행됐는지를 통해 단지 수 파악
-
-시간복잡도
-O(N^2)
-*/

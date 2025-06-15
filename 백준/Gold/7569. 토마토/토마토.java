@@ -2,11 +2,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.StringTokenizer;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -14,57 +16,60 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int H = Integer.parseInt(st.nextToken());
 
-        int[][][] tomatoes = new int[H][N][M];
+        int[][][] box = new int[H][N][M];
         Queue<int[]> queue = new LinkedList<>();
+        int[][][] visit = new int[H][N][M];
+         for (int h = 0; h < H; h++) {
+             for (int n = 0; n < N; n++) {
+                 st = new StringTokenizer(br.readLine());
+                 for (int m = 0; m < M; m++) {
+                     box[h][n][m] = Integer.parseInt(st.nextToken());
+                     visit[h][n][m] = -1;
+                     if (box[h][n][m] == 1) {
+                         queue.add(new int[]{h, n, m});
+                         visit[h][n][m] = 0;
+                     }
+                 }
+             }
+         }
 
-        for (int i = 0; i < H; i++) {
-            for (int j = 0; j < N; j++) {
-                st = new StringTokenizer(br.readLine());
-                for (int k = 0; k < M; k++) {
-                    tomatoes[i][j][k] = Integer.parseInt(st.nextToken());
-                    if (tomatoes[i][j][k] == 1) {
-                        queue.add(new int[]{i, j, k, 0});
-                    }
-                }
+
+
+         int[] dz = {-1, 1, 0, 0, 0, 0};
+         int[] dy = {0, 0, -1, 1, 0, 0};
+         int[] dx = {0, 0, 0, 0, -1, 1};
+
+         while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+
+            for (int k = 0; k < 6; k++) {
+                int nz = now[0] + dz[k];
+                int ny = now[1] + dy[k];
+                int nx = now[2] + dx[k];
+
+                if (nz < 0 || ny < 0 || nx < 0 || nz >= H || ny >= N || nx >= M) continue;
+                if (visit[nz][ny][nx] != -1 || box[nz][ny][nx] == -1) continue;
+
+                queue.add(new int[]{nz, ny, nx});
+                visit[nz][ny][nx] = visit[now[0]][now[1]][now[2]] + 1;
             }
-        }
+         }
 
-        int[] dh = {-1, 1, 0, 0, 0, 0};
-        int[] dx = {0, 0, -1, 1, 0, 0};
-        int[] dy = {0, 0, 0, 0, -1, 1};
+         int answer = 0;
+         for (int h = 0; h < H; h++) {
+             for (int n = 0; n < N; n++) {
+                 for (int m = 0; m < M; m++) {
+                     if (box[h][n][m] != -1 && visit[h][n][m] == -1) {
+                         System.out.println(-1);
+                         return;
+                     }
 
-        int result = 0;
-        while (!queue.isEmpty()) {
-            int[] temp = queue.poll();
+                     answer = Math.max(answer, visit[h][n][m]);
+                 }
+             }
+         }
 
-            for (int i = 0; i < 6; i++) {
-                int h = temp[0] + dh[i];
-                int x = temp[1] + dx[i];
-                int y = temp[2] + dy[i];
-                
-                if (h < 0 || x < 0 || y < 0 || h >= H || x >= N || y >= M || tomatoes[h][x][y] != 0) continue;
-                
-                queue.add(new int[]{h, x, y, temp[3]+1});
-                tomatoes[h][x][y] = 1;
-            }
-
-            if (queue.isEmpty()) {
-                result = temp[3];
-                break;
-            }
-        }
-
-        for (int i = 0; i < H; i++) {
-            for (int j = 0; j < N; j++) {
-                for (int k = 0; k < M; k++) {
-                    if (tomatoes[i][j][k] == 0) {
-                        System.out.println(-1);
-                        return;
-                    }
-                }
-            }
-        }
-
-        System.out.println(result);
+        System.out.println(answer);
     }
+
 }

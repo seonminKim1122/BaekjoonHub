@@ -5,62 +5,59 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N;
-    static int M;
-    static int[][] scores;
-    static boolean[][] visited;
-    static int result = 0;
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        scores = new int[N][M];
-        visited = new boolean[N][M];
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
+        int[][] map = new int[N][M];
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
-                scores[i][j] = Integer.parseInt(st.nextToken());
+                map[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
+
+        boolean[][] visit = new boolean[N][M];
+        int answer = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                visited[i][j] = true;
-                dfs(i, j, scores[i][j], 1);
-                visited[i][j] = false;
+                visit[i][j] = true;
+                answer = Math.max(answer, solve(map, visit, i, j, 0, map[i][j], N, M));
             }
         }
 
-        System.out.println(result);
+        System.out.println(answer);
     }
 
-    public static void dfs(int i, int j, int sum, int depth) {
-        if (depth == 4) {
-            result = Math.max(result, sum);
-            return;
+    public static int solve(int[][] map, boolean[][] visit, int y, int x, int depth, int sum, int N, int M) {
+        if (depth == 3) {
+            return sum;
         }
 
+        int[] dy = {-1, 1, 0, 0};
+        int[] dx = {0, 0, -1, 1};
+
+        int result = 0;
         for (int k = 0; k < 4; k++) {
-            int x = i + dx[k];
-            int y = j + dy[k];
-            
-            if (x < 0 || y < 0 || x >= N || y >= M || visited[x][y]) continue;
+            int ny = y + dy[k];
+            int nx = x + dx[k];
 
-            if (depth == 2) {
-                visited[x][y] = true;
-                dfs(i, j, sum + scores[x][y], depth + 1);
-                visited[x][y] = false;
-            }
+            if (ny < 0 || nx < 0 || ny >= N || nx >= M) continue;
+            if (visit[ny][nx]) continue;
 
-            visited[x][y] = true;
-            dfs(x, y, sum + scores[x][y], depth + 1);
-            visited[x][y] = false;
+            visit[ny][nx] = true;
+            result = Math.max(result, solve(map, visit, ny, nx, depth + 1, sum + map[ny][nx], N, M));
+            result = Math.max(result, solve(map, visit, y, x, depth + 1, sum + map[ny][nx], N, M));
+            visit[ny][nx] = false;
         }
+
+
+        return result;
     }
 }

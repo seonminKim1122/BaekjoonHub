@@ -1,52 +1,63 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         int T = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
 
+        StringBuilder answer = new StringBuilder();
+        while (T > 0) {
+            T--;
 
-
-        for (int i = 0; i < T; i++) {
             int k = Integer.parseInt(br.readLine());
-            TreeMap<Integer, Integer> map = new TreeMap<>();
 
-            for (int j = 0; j < k; j++) {
-                String[] input = br.readLine().split(" ");
-                int x = Integer.parseInt(input[1]);
-                if (input[0].equals("I")) {
-                    map.put(x, map.getOrDefault(x, 0) + 1);
+            TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+            for (int i = 0; i < k; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+
+                String order = st.nextToken();
+                int v = Integer.parseInt(st.nextToken());
+
+                if (order.equals("I")) {
+                    treeMap.put(v, treeMap.getOrDefault(v, 0) + 1);
                 } else {
-                    if (!map.isEmpty()) {
-                        if (x == -1) {
-                            int min = map.firstKey();
-                            map.put(min, map.get(min) - 1);
-                            if (map.get(min) <= 0) {
-                                map.remove(min);
-                            }
-                        } else {
-                            int max = map.lastKey();
-                            map.put(max, map.get(max) - 1);
-                            if (map.get(max) <= 0) {
-                                map.remove(max);
-                            }
-                        }
+                    if (treeMap.isEmpty()) continue;
+
+                    int number;
+                    if (v == 1) {
+                        number = treeMap.lastKey();
+                    } else {
+                        number = treeMap.firstKey();
+                    }
+
+                    treeMap.put(number, treeMap.get(number) - 1);
+
+                    if (treeMap.get(number) == 0) {
+                        treeMap.remove(number);
                     }
                 }
             }
 
-            if (map.isEmpty()) {
-                sb.append("EMPTY").append("\n");
+            if (treeMap.isEmpty()) {
+                answer.append("EMPTY")
+                        .append("\n");
             } else {
-                sb.append(map.lastKey()).append(" ").append(map.firstKey()).append("\n");
+                answer.append(treeMap.lastKey())
+                        .append(" ")
+                        .append(treeMap.firstKey())
+                        .append("\n");
             }
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
 }

@@ -1,23 +1,22 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int INF = 1_000_000_001;
+    static final int INF = 100000 * 999;
 
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = Integer.parseInt(br.readLine()); // 도시의 개수
-        int M = Integer.parseInt(br.readLine()); // 버스의 개수
+        int N = Integer.parseInt(br.readLine()); // 1 <= N <= 1000    : 도시의 개수
+        int M = Integer.parseInt(br.readLine()); // 1 <= M <= 100000  : 버스의 개수
 
-        int[][] graph = new int[N][N];
+        int[][] cost = new int[N][N];
         for (int i = 0; i < N; i++) {
-            Arrays.fill(graph[i], INF);
-            graph[i][i] = 0;
+            Arrays.fill(cost[i], INF);
         }
 
         for (int i = 0; i < M; i++) {
@@ -25,43 +24,51 @@ public class Main {
 
             int from = Integer.parseInt(st.nextToken()) - 1;
             int to = Integer.parseInt(st.nextToken()) - 1;
-            int cost = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
 
-            graph[from][to] = Math.min(graph[from][to], cost);
+            cost[from][to] = Math.min(cost[from][to], c);
         }
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int start = Integer.parseInt(st.nextToken()) - 1;
-        int end = Integer.parseInt(st.nextToken()) - 1;
+        int from = Integer.parseInt(st.nextToken()) - 1;
+        int to = Integer.parseInt(st.nextToken()) - 1;
 
-        int[] distance = new int[N];
-        Arrays.fill(distance, INF);
-        distance[start] = 0;
+        System.out.println(solve(from, to, cost, N));
+    }
 
-        boolean[] visited = new boolean[N];
+    static int solve(int from, int to, int[][] cost, int N) {
+        
+        int[] dist = new int[N]; // from 에서 to 까지의 비용 dist[to]
+        boolean[] used = new boolean[N];
+        Arrays.fill(dist, INF);
+        dist[from] = 0;
 
-        for (int k = 0; k < N; k++) {
-            int min = 100000001;
-            int mid = -1;
-
-            for (int i = 0; i < N; i++) {
-                if (!visited[i] && distance[i] < min) {
-                    min = distance[i];
-                    mid = i;
+        for (int i = 0; i < N; i++) {
+            // 최소비용인 노드 찾기
+            int min = INF;
+            int node = -1;
+            for (int k = 0; k < N; k++) {
+                if (used[k]) continue;
+                if (dist[k] < min) {
+                    node = k;
+                    min = dist[k];
                 }
             }
-            
-            if (mid == -1) break;
-            
-            visited[mid] = true;
-            for (int to = 0; to < N; to++) {
-                if (distance[to] > distance[mid] + graph[mid][to]) {
-                    distance[to] = distance[mid] + graph[mid][to];
+
+            if (node == -1) break;
+
+            used[node] = true;
+            // 찾은 노드에서 갈 수 있는 곳 갱신
+            for (int next = 0; next < N; next++) {
+                if (cost[node][next] == INF) continue;
+
+                if (dist[node] + cost[node][next] < dist[next]) {
+                    dist[next] = dist[node] + cost[node][next];
                 }
             }
         }
 
-        System.out.println(distance[end]);
+        return dist[to];
     }
 }

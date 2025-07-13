@@ -7,22 +7,39 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        char[] word1 = br.readLine().toCharArray();
-        char[] word2 = br.readLine().toCharArray();
+        String s1 = br.readLine();
+        String s2 = br.readLine();
 
-        int N = word1.length;
-        int M = word2.length;
-        int[][] dp = new int[N + 1][M + 1];
+        int N = s1.length();
+        int M = s2.length();
 
-        for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= M; j++) {
-                if (word1[i - 1] == word2[j - 1]) {
-                    dp[i][j] = dp[i - 1][j - 1] + 1;
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        int[][] LCS = new int[N][M];
+        if (s1.charAt(0) == s2.charAt(0)) {
+            LCS[0][0] = 1;
+        }
+
+        for (int i = 1; i < N; i++) {
+            LCS[i][0] = LCS[i - 1][0];
+            if (s1.charAt(i) == s2.charAt(0)) {
+                LCS[i][0] = 1;
+            }
+        }
+        for (int j = 1; j < M; j++) {
+            LCS[0][j] = LCS[0][j - 1];
+            if (s2.charAt(j) == s1.charAt(0)) {
+                LCS[0][j] = 1;
+            }
+        }
+
+        for (int i = 1; i < N; i++) {
+            for (int j = 1; j < M; j++) {
+                LCS[i][j] = Math.max(LCS[i - 1][j], LCS[i][j - 1]);
+                if (s1.charAt(i) == s2.charAt(j)) {
+                    LCS[i][j] = Math.max(LCS[i][j], LCS[i - 1][j - 1] + 1);
                 }
             }
         }
-        System.out.println(dp[N][M]);
+
+        System.out.println(LCS[N - 1][M - 1]);
     }
 }

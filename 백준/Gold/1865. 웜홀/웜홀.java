@@ -1,92 +1,98 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Main {
 
-    static List<Link> links;
-    static int N;
+    static final int INF = 10000 * 500;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder results = new StringBuilder();
 
         int TC = Integer.parseInt(br.readLine());
-        while (TC --> 0) {
-            String[] input = br.readLine().split(" ");
+        StringBuilder answer = new StringBuilder();
+        while (TC > 0) {
+            TC--;
 
-            N = Integer.parseInt(input[0]); // 지점의 수
-            int M = Integer.parseInt(input[1]); // 도로의 개수
-            int W = Integer.parseInt(input[2]); // 웜홀의 개수
+            StringTokenizer st = new StringTokenizer(br.readLine());
 
-            links = new ArrayList<>();
-            for (int i = 0; i < M; i++) { // 도로 정보
-                String[] temp = br.readLine().split(" ");
+            int N = Integer.parseInt(st.nextToken()); // 지점의 수
+            int M = Integer.parseInt(st.nextToken()); // 도로의 수
+            int W = Integer.parseInt(st.nextToken()); // 웜홀의 수
 
-                int S = Integer.parseInt(temp[0]) - 1;
-                int E = Integer.parseInt(temp[1]) - 1;
-                int T = Integer.parseInt(temp[2]);
 
-                links.add(new Link(S, E, T));
-                links.add(new Link(E, S, T));
+            List<Map<Integer, Integer>> graph = new ArrayList<>();
+            for (int i = 0; i < N; i++) {
+                graph.add(new HashMap<>());
+            }
+
+            for (int i = 0; i < M; i++) {
+                st = new StringTokenizer(br.readLine());
+
+                int S = Integer.parseInt(st.nextToken()) - 1;
+                int E = Integer.parseInt(st.nextToken()) - 1;
+                int T = Integer.parseInt(st.nextToken());
+
+                Map<Integer, Integer> edges = graph.get(S);
+                edges.put(E, Math.min(edges.getOrDefault(E, INF), T));
+
+                edges = graph.get(E);
+                edges.put(S, Math.min(edges.getOrDefault(S, INF), T));
             }
 
             for (int i = 0; i < W; i++) {
-                String[] temp = br.readLine().split(" ");
+                st = new StringTokenizer(br.readLine());
 
-                int S = Integer.parseInt(temp[0]) - 1;
-                int E = Integer.parseInt(temp[1]) - 1;
-                int T = Integer.parseInt(temp[2]);
+                int S = Integer.parseInt(st.nextToken()) - 1;
+                int E = Integer.parseInt(st.nextToken()) - 1;
+                int T = Integer.parseInt(st.nextToken());
 
-                links.add(new Link(S, E, -T));
+                Map<Integer, Integer> edges = graph.get(S);
+                edges.put(E, Math.min(edges.getOrDefault(E, INF), -T));
             }
 
-            String result = "NO";
-            if (bellmanFord(0)) {
-                result = "YES";
+            // 연결요소가 여러 개일 수 있으므로 임의의 노드를 만들어 연결
+            graph.add(new HashMap<>());
+            for (int i = 0; i < N; i++) {
+                graph.get(N).put(i, 0);
             }
 
-            results.append(result).append("\n");
+            answer.append(solve(graph, N + 1)).append("\n");
         }
 
-        System.out.println(results);
+        System.out.println(answer);
     }
 
-    public static boolean bellmanFord(int start) {
+    static String solve(List<Map<Integer, Integer>> graph, int N) {
 
-        int[] distance = new int[N];
-        Arrays.fill(distance, 10001);
-        distance[start] = 0;
+        int[] dist = new int[N];
+        Arrays.fill(dist, INF);
+        dist[N - 1] = 0;
 
-        for (int i = 1; i < N; i++) { // N - 1 번 갱신
-            for (Link link : links) {
-                if (distance[link.to] > distance[link.from] + link.cost) {
-                    distance[link.to] = distance[link.from] + link.cost;
+        for (int i = 0; i < N - 1; i++) {
+
+            for (int from = 0; from < N; from++) {
+                Map<Integer, Integer> edges = graph.get(from);
+
+                for (int to: edges.keySet()) {
+                    dist[to] = Math.min(dist[to], dist[from] + edges.get(to));
+                }
+            }
+
+        }
+
+        for (int from = 0; from < N; from++) {
+            Map<Integer, Integer> edges = graph.get(from);
+
+            for (int to: edges.keySet()) {
+                if (dist[to] > dist[from] + edges.get(to)) {
+                    return "YES";
                 }
             }
         }
 
-        for (Link link : links) {
-            if (distance[link.to] > distance[link.from] + link.cost) { // N 번째에 갱신이 이루어진다 = 최단 경로를 구해놨는데 또 감소 (음의 사이클 발생)
-                return true;
-            }
-        }
-
-        return false;
+        return "NO";
     }
-}
 
-class Link {
-    int from;
-    int to;
-    int cost;
-
-    Link (int from, int to, int cost) {
-        this.from = from;
-        this.to = to;
-        this.cost = cost;
-    }
 }

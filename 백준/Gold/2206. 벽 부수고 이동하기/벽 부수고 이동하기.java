@@ -7,64 +7,71 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N;
-    static int M;
-
-    static int[][]  map;
-    static boolean[][][] visited;
-
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+    static final int INF = 1000 * 1000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-        map = new int[N][M];
-        visited = new boolean[N][M][2];
-
+        char[][] map = new char[N][M];
         for (int i = 0; i < N; i++) {
-            String[] input = br.readLine().split("");
-            for (int j = 0; j < M; j++) {
-                map[i][j] = Integer.parseInt(input[j]);
-            }
+            map[i] = br.readLine().toCharArray();
         }
 
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{0, 0, 1, 0});
-        visited[0][0][0] = true;
+        System.out.println(solve(map, N, M));
+    }
 
+    static int solve(char[][] map, int N, int M) {
+        int[][][] cost = new int[2][N][M];
+        for (int d = 0; d < 2; d++) {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < M; j++) {
+                    cost[d][i][j] = INF;
+                }
+            }
+        }
+        /*
+        cost[0][i][j] -> 벽을 하나도 안 부수고 i, j 에 도달한 경우의 최소 비용
+        cost[1][i][j] -> 이전에 벽을 한개 부수고 i, j 에 도달한 경우의 최소 비용
+         */
+        cost[0][0][0] = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{0, 0, 0});
+
+        int[] dy = {-1, 1, 0, 0};
+        int[] dx = {0, 0, -1, 1};
         while (!queue.isEmpty()) {
             int[] now = queue.poll();
 
-            if (now[0] == N - 1 && now[1] == M - 1) {
-                System.out.println(now[2]);
-                return;
-            }
+            int breakWall = now[0];
+            int y = now[1];
+            int x = now[2];
 
-            for (int i = 0; i < 4; i++) {
-                int x = now[0] + dx[i];
-                int y = now[1] + dy[i];
 
-                if (x < 0 || y < 0 || x >= N || y >= M) continue;
+            for (int k = 0; k < 4; k++) {
+                int ny = y + dy[k];
+                int nx = x + dx[k];
 
-                if (map[x][y] == 1) {
-                    if (now[3] == 0 && !visited[x][y][1]) {
-                        queue.add(new int[]{x, y, now[2] + 1, 1});
-                        visited[x][y][1] = true;
+                if (ny < 0 || nx < 0 || ny >= N || nx >= M) continue;
+
+                if (map[ny][nx] == '0') {
+                    if (cost[breakWall][ny][nx] > cost[breakWall][y][x] + 1) {
+                        cost[breakWall][ny][nx] = cost[breakWall][y][x] + 1;
+                        queue.add(new int[]{breakWall, ny, nx});
                     }
-                } else {
-                    if (!visited[x][y][now[3]]) {
-                        queue.add(new int[]{x, y, now[2] + 1, now[3]});
-                        visited[x][y][now[3]] = true;
+                } else if (breakWall == 0){
+                    if (cost[1][ny][nx] > cost[0][y][x] + 1) {
+                        cost[1][ny][nx] = cost[0][y][x] + 1;
+                        queue.add(new int[]{1, ny, nx});
                     }
                 }
             }
         }
 
-        System.out.println(-1);
+        int result = Math.min(cost[0][N - 1][M - 1], cost[1][N - 1][M - 1]);
+        return result == INF ? -1 : result + 1;
     }
 }

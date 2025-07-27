@@ -4,51 +4,57 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 
 public class Main {
+
+    static final int INF = 1000 * 1000;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        char[] expression = br.readLine().toCharArray();
+        Stack<Character> stack = new Stack<>();
 
-        String formula = br.readLine();
+        StringBuilder answer = new StringBuilder();
+        for (char c : expression) {
+            if (c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
+                while (!stack.isEmpty()) {
+                    char operator = stack.peek();
 
-        Stack<Character> operators = new Stack<>();
-
-        StringBuilder sb = new StringBuilder();
-
-        for (char c : formula.toCharArray()) {
-            if (c >= 'A' && c <= 'Z') {
-                sb.append(c);
-            } else {
-                if (c != '(' && c != ')') {
-                    while (!operators.isEmpty() && priority(operators.peek()) >= priority(c)) {
-                        sb.append(operators.pop());
-                    }
-                    operators.push(c);
-                } else {
-                    if (c == '(') {
-                        operators.push(c);
+                    if (operator == '(') {
+                        stack.pop();
+                        break;
                     } else {
-                        while (!operators.isEmpty() && operators.peek() != '(') {
-                            sb.append(operators.pop());
-                        }
-                        operators.pop();
+                        answer.append(stack.pop());
                     }
+                }
+            } else if (isNotOperator(c)) {
+                answer.append(c);
+            } else {
+                if (stack.isEmpty()) {
+                    stack.push(c);
+                } else {
+                    while (!stack.isEmpty() && getPriority(stack.peek()) >= getPriority(c)) {
+                        answer.append(stack.pop());
+                    }
+                    stack.push(c);
                 }
             }
         }
 
-        while (!operators.isEmpty()) {
-            sb.append(operators.pop());
+        while (!stack.isEmpty()) {
+            answer.append(stack.pop());
         }
 
-        System.out.println(sb);
+        System.out.println(answer);
     }
 
-    public static int priority(char operator) {
-        if (operator == '+' || operator == '-') {
-            return 1;
-        } else if (operator == '*' || operator == '/'){
-            return 2;
-        } else {
-            return 0;
-        }
+    static boolean isNotOperator(char c) {
+        return c != '+' && c != '-' && c != '*' && c != '/';
+    }
+
+    static int getPriority(char c) {
+        if (c == '(') return 0;
+        if (c == '+' || c == '-') return 1;
+        return 2;
     }
 }

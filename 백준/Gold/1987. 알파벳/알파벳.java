@@ -1,54 +1,51 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
 
-    static int result = 0;    
-    
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
-
-    static char[][] board;    
-    static boolean[] visited = new boolean[26];
-
-    static int R;
-    static int C;
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, -1, 1};
+    static int answer = 1;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
+        int R = Integer.parseInt(st.nextToken());
+        int C = Integer.parseInt(st.nextToken());
 
-        board = new char[R][C];
-        
-        for (int i = 0; i < R; i++) {
-            String input = br.readLine();
-            for (int j = 0; j < C; j++) {
-                board[i][j] = input.charAt(j);
+        char[][] board = new char[R][C];
+        for (int r = 0; r < R; r++) {
+            char[] line = br.readLine().toCharArray();
+            for (int c = 0; c < C; c++) {
+                board[r][c] = line[c];
             }
         }
-				
-		visited[board[0][0] - 'A'] = true;
-        dfs(0, 0, 1);
 
-        System.out.println(result);
+        boolean[] inPath = new boolean[26];
+        inPath[board[0][0] - 'A'] = true;
+        dfs(board, 0, 0, inPath, R, C, 1);
+
+        System.out.println(answer);
     }
 
-    public static void dfs(int i, int j, int depth) {
-        result = Math.max(result, depth);
+    static void dfs(char[][] board, int r, int c, boolean[] inPath
+                  , int R, int C, int cnt) {
+
+        answer = Math.max(answer, cnt);
 
         for (int k = 0; k < 4; k++) {
-            int nx = i + dx[k];
-            int ny = j + dy[k];
+            int nr = r + dr[k];
+            int nc = c + dc[k];
 
-            if (nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
-            if (visited[board[nx][ny] - 'A']) continue;
+            if (nr < 0 || nc < 0 || nr >= R || nc >= C) continue;
+            if (inPath[board[nr][nc] - 'A']) continue;
 
-            visited[board[nx][ny] - 'A'] = true;
-            dfs(nx, ny, depth + 1);
-            visited[board[nx][ny] - 'A'] = false;
+            inPath[board[nr][nc] - 'A'] = true;
+            dfs(board, nr, nc, inPath, R, C, cnt + 1);
+            inPath[board[nr][nc] - 'A'] = false;
         }
     }
 }

@@ -6,39 +6,51 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input;
 
-        String input = br.readLine();
-        Node root = new Node(Integer.parseInt(input));
-        while ((input = br.readLine()) != null && !input.equals("")) {
-            Node node = new Node(Integer.parseInt(input));
-            root.addLeaf(node);
+        // 루트 노드
+        input = br.readLine();
+        int value = Integer.parseInt(input);
+        Node root = new Node(value);
+        while ((input = br.readLine()) != null)  {
+            value = Integer.parseInt(input);
+            Node node = new Node(value);
+            root.addChild(node);
         }
 
         root.postOrder();
     }
 
     static class Node {
+        int value;
         Node left;
         Node right;
-        int value;
 
-        Node (int value) {
+        Node(int value) {
             this.value = value;
         }
 
-        void addLeaf(Node node) {
-            if (node.value < value) {
-                if (left == null) {
-                    left = node;
-                } else {
-                    left.addLeaf(node);
-                }
+        void addChild(Node node) {
+            if (node.value < this.value) {
+                addLeft(node);
+            } else if (this.value < node.value) {
+                addRight(node);
+            }
+        }
+
+        void addLeft(Node node) {
+            if (this.left == null) {
+                this.left = node;
             } else {
-                if (right == null) {
-                    right = node;
-                } else {
-                    right.addLeaf(node);
-                }
+                this.left.addChild(node);
+            }
+        }
+
+        void addRight(Node node) {
+            if (this.right == null) {
+                right = node;
+            } else {
+                this.right.addChild(node);
             }
         }
 
@@ -46,11 +58,9 @@ public class Main {
             if (left != null) {
                 left.postOrder();
             }
-
             if (right != null) {
                 right.postOrder();
             }
-
             System.out.println(value);
         }
     }

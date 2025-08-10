@@ -4,38 +4,44 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
-        int[] numbers = new int[N];
+        int[] A = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            numbers[i] = Integer.parseInt(st.nextToken());
+            A[i] = Integer.parseInt(st.nextToken());
         }
 
-        int[] LCS = new int[N];
-        int[] LDS = new int[N];
-
-        for (int i = 0; i < N; i++) {
-            LCS[i] = 1;
-            LDS[N - 1 - i] = 1;
+        int[] LIS = new int[N];
+        LIS[0] = 1;
+        for (int i = 1; i < N; i++) {
+            LIS[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (numbers[i] > numbers[j]) {
-                    LCS[i] = Math.max(LCS[i], LCS[j] + 1);
-                }
-
-                if (numbers[N - 1 - i] > numbers[N - 1 - j]) {
-                    LDS[N - 1 - i] = Math.max(LDS[N - 1 - i], LDS[N - 1 - j] + 1);
+                if (A[j] < A[i]) {
+                    LIS[i] = Math.max(LIS[i], LIS[j] + 1);
                 }
             }
         }
 
-        int result = 0;
-        for (int i = 0; i < N; i++) {
-            result = Math.max(result, LCS[i] + LDS[i] - 1);
+        int[] LDS = new int[N];
+        LDS[N - 1] = 1;
+        for (int i = N - 2; i >= 0; i--) {
+            LDS[i] = 1;
+            for (int j = N - 1; j > i; j--) {
+                if (A[j] < A[i]) {
+                    LDS[i] = Math.max(LDS[i], LDS[j] + 1);
+                }
+            }
         }
 
-        System.out.println(result);
+        int answer = LIS[0] + LDS[0] - 1;
+        for (int i = 0; i < N; i++) {
+            answer = Math.max(answer, LIS[i] + LDS[i] - 1);
+        }
+
+        System.out.println(answer);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -14,40 +15,60 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
+        int[] times = new int[100001];
+        Arrays.fill(times, 100000);
+        times[N] = 0;
+        int[] ways = new int[100001];
+        ways[N] = 1;
+
         Queue<Integer> queue = new LinkedList<>();
-        int[] visitedTime = new int[100001];
-        Arrays.fill(visitedTime, 100000);
-
         queue.add(N);
-        visitedTime[N] = 0;
 
-        int result = 0;
         while (!queue.isEmpty()) {
-            int now = queue.remove();
-            if (visitedTime[now] > visitedTime[K]) continue;
+            int X = queue.poll();
 
-            if (now == K) {
-                result += 1;
-                continue;
+            if (X == K) {
+                break;
             }
 
-            if (now - 1 >= 0 && visitedTime[now - 1] >= visitedTime[now] + 1) {
-                queue.add(now - 1);
-                visitedTime[now - 1] = visitedTime[now] + 1;
+            // X - 1
+            if (X - 1 >= 0) {
+                if (times[X - 1] > times[X] + 1) {
+                    times[X - 1] = times[X] + 1;
+                    ways[X - 1] = 1;
+                    queue.add(X - 1);
+                } else if (times[X - 1] == times[X] + 1) {
+                    ways[X - 1] += 1;
+                    queue.add(X - 1);
+                }
             }
 
-            if (now + 1 <= 100000 && visitedTime[now + 1] >= visitedTime[now] + 1) {
-                queue.add(now + 1);
-                visitedTime[now + 1] = visitedTime[now] + 1;
+            // X + 1;
+            if (X + 1 <= 100000) {
+                if (times[X + 1] > times[X] + 1) {
+                    times[X + 1] = times[X] + 1;
+                    ways[X + 1] = 1;
+                    queue.add(X + 1);
+                } else if (times[X + 1] == times[X] + 1) {
+                    ways[X + 1] += 1;
+                    queue.add(X + 1);
+                }
             }
 
-            if (2 * now <= 100000 && visitedTime[2 * now] >= visitedTime[now] + 1) {
-                queue.add(2 * now);
-                visitedTime[2 * now] = visitedTime[now] + 1;
+            // 2 * X
+            if (2 * X <= 100000) {
+                if (times[2 * X] > times[X] + 1) {
+                    times[2 * X] = times[X] + 1;
+                    ways[2 * X] = 1;
+                    queue.add(2 * X);
+                } else if (times[2 * X] == times[X] + 1) {
+                    ways[2 * X] += 1;
+                    queue.add(2 * X);
+                }
             }
         }
 
-        System.out.println(visitedTime[K]);
-        System.out.println(result);
+        System.out.println(times[K]);
+        System.out.println(ways[K]);
     }
 }

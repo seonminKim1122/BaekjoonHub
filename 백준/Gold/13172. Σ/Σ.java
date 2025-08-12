@@ -37,7 +37,7 @@ public class Main {
             return 1;
         }
         if (X == 1) {
-            return N;
+            return N % DIV;
         }
 
         long temp = power(N, X / 2);

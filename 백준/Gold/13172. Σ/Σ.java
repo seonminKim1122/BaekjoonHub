@@ -5,42 +5,46 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int MOD = 1_000_000_007;
+    static final int DIV = 1_000_000_007;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int M = Integer.parseInt(br.readLine());
-        long answer = 0;
+
+        int result = 0;
         for (int i = 0; i < M; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
 
-            long N = Integer.parseInt(st.nextToken());
-            long S = Integer.parseInt(st.nextToken());
+            int N = Integer.parseInt(st.nextToken());
+            int S = Integer.parseInt(st.nextToken());
 
-            long gcd = GCD(N, S);
-
-            N /= gcd;
-            S /= gcd;
-
-            answer += S * modularReverse(N, MOD - 2);
-            answer %= MOD;
+            long inverse = calcInverse(N);
+            int Y = (int)(((S % DIV) * (inverse % DIV)) % DIV);
+            result += Y;
+            result %= DIV;
         }
-        System.out.println(answer);
+
+        System.out.println(result);
     }
 
-    public static long GCD(long A, long B) {
-        if (B == 0) return A;
-        return GCD(B, A % B);
+    static long calcInverse(int N) {
+        return power(N, DIV - 2);
     }
 
-    public static long modularReverse(long b, int X) {
-        if (X == 1) return b;
-        long temp = modularReverse(b, X / 2);
-        if (X % 2 == 1) {
-            return temp * temp % MOD * b % MOD;
+    static long power(int N, int X) {
+        if (X == 0) {
+            return 1;
+        }
+        if (X == 1) {
+            return N;
+        }
+
+        long temp = power(N, X / 2);
+        if (X % 2 == 0) {
+            return ((temp % DIV) * (temp % DIV)) % DIV;
         } else {
-            return temp * temp % MOD;
+            return ((((temp % DIV) * (temp % DIV)) % DIV) * (N % DIV)) % DIV;
         }
     }
 }

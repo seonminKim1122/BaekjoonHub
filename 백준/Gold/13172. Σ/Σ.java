@@ -20,7 +20,7 @@ public class Main {
             int S = Integer.parseInt(st.nextToken());
 
             long inverse = calcInverse(N);
-            int Y = (int)(((S % DIV) * (inverse % DIV)) % DIV);
+            int Y = (int)(((S % DIV) * inverse) % DIV);
             result += Y;
             result %= DIV;
         }
@@ -42,9 +42,9 @@ public class Main {
 
         long temp = power(N, X / 2);
         if (X % 2 == 0) {
-            return ((temp % DIV) * (temp % DIV)) % DIV;
+            return (temp * temp) % DIV;
         } else {
-            return ((((temp % DIV) * (temp % DIV)) % DIV) * (N % DIV)) % DIV;
+            return ((temp * temp) % DIV) * (N % DIV) % DIV;
         }
     }
 }

@@ -1,22 +1,32 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int a = sc.nextInt();
-        int b = sc.nextInt();
-        int c = sc.nextInt();
-        int d = sc.nextInt();
-        int e = sc.nextInt();
-        int f = sc.nextInt();
-        
-        for (int x = -999; x <= 999; x++) {
-            for (int y = -999; y <= 999; y++) {
-                if (a*x+b*y == c && d*x+e*y == f) {
-                    System.out.println(x + " " + y);
-                    break;
-                }
-            }
-        }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int a = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+        int c = Integer.parseInt(st.nextToken());
+        int d = Integer.parseInt(st.nextToken());
+        int e = Integer.parseInt(st.nextToken());
+        int f = Integer.parseInt(st.nextToken());
+
+        /**
+         * ax + by = c
+         * dx + ey = f
+         *
+         * x = (ce - fb) / (ae - db)
+         * y = (cd - fa) / (bd - ae)
+         */
+        int x = (c * e - f * b) / (a * e - d * b);
+        int y = (c * d - f * a) / (b * d - a * e);
+
+        System.out.println(x + " " + y);
     }
+
 }

@@ -5,57 +5,69 @@ import java.util.*;
 
 public class Main {
 
-    static int N;
-    static int[] A;
-    static int M;
-    static int[] B;
-
     public static void main(String[] args) throws IOException {
-        input();
-        Stack<Integer> printer = new Stack<>();
-        solve(0, 0, printer);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println(printer.size());
-        while (!printer.isEmpty()) {
-            System.out.print(printer.pop() + " ");
+        int N = Integer.parseInt(br.readLine());
+        List<int[]> arr1 = new ArrayList<>();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            int number = Integer.parseInt(st.nextToken());
+            arr1.add(new int[]{number, i});
         }
-    }
 
-    static void solve(int a, int b, Stack<Integer> printer) {
-        int max = 0;
-        int nextA = -1;
-        int nextB = -1;
-        for (int i = a; i < N; i++) {
-            for (int j = b; j < M; j++) {
-                if (A[i] == B[j] && A[i] > max) {
-                    max = A[i];
-                    nextA = i;
-                    nextB = j;
+        int M = Integer.parseInt(br.readLine());
+        List<int[]> arr2 = new ArrayList<>();
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            int number = Integer.parseInt(st.nextToken());
+            arr2.add(new int[]{number, i});
+        }
+
+        // 값이 큰 순, 인덱스 빠른 순
+        arr1.sort((i1, i2) -> (i1[0] - i2[0] == 0 ? i1[1] - i2[1] : i2[0] - i1[0]));
+        arr2.sort((i1, i2) -> (i1[0] - i2[0] == 0 ? i1[1] - i2[1] : i2[0] - i1[0]));
+
+        int i = 0;
+        int j = 0;
+        int beforeI = -1;
+        int beforeJ = -1;
+        int cnt = 0;
+        StringBuilder answer = new StringBuilder();
+        while (i < N && j < M) {
+            int num1 = arr1.get(i)[0];
+            int index1 = arr1.get(i)[1];
+
+            int num2 = arr2.get(j)[0];
+            int index2 = arr2.get(j)[1];
+
+            if (num1 > num2) {
+                i++;
+            } else if (num1 < num2) {
+                j++;
+            } else {
+                if (beforeI > index1 && beforeJ > index2) {
+                    i++;
+                    j++;
+                } else if (beforeI > index1) {
+                    i++;
+                } else if (beforeJ > index2) {
+                    j++;
+                } else {
+                    answer.append(num1).append(" ");
+                    cnt++;
+                    beforeI = index1;
+                    beforeJ = index2;
+
+                    i++;
+                    j++;
                 }
             }
         }
 
-        if (max != 0) {
-            solve(nextA + 1, nextB + 1, printer);
-            printer.add(max);
-        }
-    }
-
-    static void input() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        N = Integer.parseInt(br.readLine());
-        A = new int[N];
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
-        }
-
-        M = Integer.parseInt(br.readLine());
-        B = new int[M];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < M; i++) {
-            B[i] = Integer.parseInt(st.nextToken());
+        System.out.println(cnt);
+        if (cnt > 0) {
+            System.out.println(answer);
         }
     }
 }

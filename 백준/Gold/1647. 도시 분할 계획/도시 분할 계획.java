@@ -1,81 +1,88 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
-    static int[] parent;
-    static int N;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());   // 집의 갯수(2 <= N <= 100000)
+        int M = Integer.parseInt(st.nextToken());   // 길의 갯수(1 <= M <= 1000000)
 
-        PriorityQueue<Edge> edges = new PriorityQueue<>((e1, e2) -> e1.cost - e2.cost);
-        for (int i = 0; i < M; i++) {
+        PriorityQueue<Edge> edges = new PriorityQueue<>();
+        for (int m = 0; m < M; m++) {
             st = new StringTokenizer(br.readLine());
 
-            int A = Integer.parseInt(st.nextToken());
-            int B = Integer.parseInt(st.nextToken());
-            int C = Integer.parseInt(st.nextToken());
+            int A = Integer.parseInt(st.nextToken());   // A
+            int B = Integer.parseInt(st.nextToken());   // B
+            int C = Integer.parseInt(st.nextToken());   // C
 
             Edge edge = new Edge(A, B, C);
             edges.add(edge);
         }
 
-        parent = new int[N + 1];
-        for (int i = 0; i <= N; i++) {
+        int usedEdge = 0;
+        int result = 0;
+        int[] parent = new int[N + 1];
+        for (int i = 1; i <= N; i++) {
             parent[i] = i;
         }
 
-        System.out.println(kruskal(edges));
-    }
-
-    static int kruskal(PriorityQueue<Edge> edges) {
-        int cnt = 0;
-        int result = 0;
-        int max = 0;
-        while (cnt < N - 1 && !edges.isEmpty()) {
+        while (!edges.isEmpty() && usedEdge < N - 1) {
             Edge edge = edges.poll();
 
-            if (union(edge.from, edge.to)) {
-                cnt++;
-                result += edge.cost;
-                max = Math.max(max, edge.cost);
+            if (union(edge.A, edge.B, parent))  {
+                usedEdge++;
+                result += edge.C;
+            }
+
+            if (usedEdge == N - 1) {
+                result -= edge.C;
+                break;
             }
         }
 
-        return result - max;
+        System.out.println(result);
     }
 
-    static boolean union(int node1, int node2) {
-        int root1 = find(node1);
-        int root2 = find(node2);
+    static boolean union(int A, int B, int[] parent) {
+        int root1 = find(A, parent);
+        int root2 = find(B, parent);
 
-        if (root1 == root2) return false;
+        if (root1 == root2) {
+            return false;
+        }
+
         parent[root2] = root1;
         return true;
     }
 
-    static int find(int node) {
-        if (parent[node] == node) return node;
-        parent[node] = find(parent[node]);
-        return parent[node];
+    static int find(int A, int[] parent) {
+        if (parent[A] == A) {
+            return A;
+        }
+
+        parent[A] = find(parent[A], parent);
+        return parent[A];
     }
 
-    static class Edge {
-        int from;
-        int to;
-        int cost;
+    static class Edge implements Comparable<Edge> {
+        int A;
+        int B;
+        int C;
 
-        Edge(int from, int to, int cost) {
-            this.from = from;
-            this.to = to;
-            this.cost = cost;
+        Edge(int A, int B, int C) {
+            this.A = A;
+            this.B = B;
+            this.C = C;
+        }
+
+        @Override
+        public int compareTo(Edge other) {
+            return this.C - other.C;
         }
     }
 }

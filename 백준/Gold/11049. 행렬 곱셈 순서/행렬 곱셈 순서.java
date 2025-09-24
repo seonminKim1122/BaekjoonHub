@@ -6,35 +6,36 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-
-    public static void main(String[] args)  throws IOException {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
-        int[] R = new int[N];
-        int[] C = new int[N];
+        int[] row = new int[N];
+        int[] col = new int[N];
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
 
-            R[i] = Integer.parseInt(st.nextToken());
-            C[i] = Integer.parseInt(st.nextToken());
+            int r = Integer.parseInt(st.nextToken());
+            int c = Integer.parseInt(st.nextToken());
+
+            row[i] = r;
+            col[i] = c;
         }
 
         int[][] dp = new int[N][N];
-
         for (int i = 0; i < N; i++) {
             Arrays.fill(dp[i], Integer.MAX_VALUE);
             dp[i][i] = 0;
         }
 
-        for (int j = 1; j < N; j++) {
-            for (int i = j - 1; i >= 0; i--) {
-                int end = (j - i) / 2 + 1;
-                for (int x = 1; x <= end; x++) {
-                    int v1 = dp[i + x][j] + dp[i][j - (j - i + 1 - x)] + (R[i] * R[i + x] * C[j]);
-                    int v2 = dp[i][j - x] + dp[i + (j - i + 1 - x)][j] + (R[i] * C[j - x] * C[j]);
-                    int v = Math.min(v1, v2);
-                    dp[i][j] = Math.min(dp[i][j], v);
+
+        for (int len = 2; len <= N; len++) {
+            for (int i = 0; i + len - 1 < N; i++) {
+                int j = i + len - 1;
+
+                for (int k = i; k < j; k++) {
+                    int cost = dp[i][k] + dp[k + 1][j] + row[i] * col[k] * col[j];
+                    dp[i][j] = Math.min(dp[i][j], cost);
                 }
             }
         }
@@ -42,6 +43,3 @@ public class Main {
         System.out.println(dp[0][N - 1]);
     }
 }
-/*
-4 * 1 이나 1 * 4 나 같으므로 x 의 범위를 더 줄일 수 있지 않나?
- */

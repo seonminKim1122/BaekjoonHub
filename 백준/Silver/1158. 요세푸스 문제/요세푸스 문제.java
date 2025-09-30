@@ -1,34 +1,45 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        String[] s = br.readLine().split(" ");
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-        int N = Integer.parseInt(s[0]);
-        int K = Integer.parseInt(s[1]);
-
-        Queue<Integer> queue = new LinkedList<>();
+        Deque<Integer> deque = new ArrayDeque<>();
         for (int i = 1; i <= N; i++) {
-            queue.add(i);
+            deque.addLast(i);
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("<");
-        while (!queue.isEmpty()) {
-            for (int i = 0; i < K-1; i++) {
-                queue.add(queue.poll());
+        StringBuilder answer = new StringBuilder();
+        answer.append("<");
+        int count = 0;
+        while (!deque.isEmpty()) {
+            int person = deque.pollFirst();
+            count++;
+
+            if (count == K) {
+                answer.append(person);
+                if (!deque.isEmpty()) {
+                    answer.append(", ");
+                }
+                count = 0;
+                continue;
             }
-            sb.append(queue.poll()).append(", ");
-        }
-        sb.setLength(sb.length()-2);
-        sb.append(">");
 
-        System.out.println(sb);
+            deque.addLast(person);
+        }
+        answer.append(">");
+
+        System.out.println(answer);
     }
 }

@@ -5,61 +5,88 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-    static long answer = 0;
-    static int[][] data;
-    static int preSum[][];
-    static StringTokenizer st;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        N = Integer.parseInt(br.readLine());
-        data = new int[N][4];
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            data[i][0] = Integer.parseInt(st.nextToken());
-            data[i][1] = Integer.parseInt(st.nextToken());
-            data[i][2] = Integer.parseInt(st.nextToken());
-            data[i][3] = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(br.readLine());
+        int[] A = new int[n];
+        int[] B = new int[n];
+        int[] C = new int[n];
+        int[] D = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            A[i] = Integer.parseInt(st.nextToken());
+            B[i] = Integer.parseInt(st.nextToken());
+            C[i] = Integer.parseInt(st.nextToken());
+            D[i] = Integer.parseInt(st.nextToken());
         }
 
-        preSum = new int[2][N * N];
-        int count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                preSum[0][count] = data[i][0] + data[j][1];
-                preSum[1][count++] = data[i][2] + data[j][3];
+        int[] AB = new int[n * n];
+        int[] CD = new int[n * n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                AB[n * i + j] = A[i] + B[j];
+                CD[n * i + j] = C[i] + D[j];
             }
         }
-        Arrays.sort(preSum[0]);
-        Arrays.sort(preSum[1]);
-        int first = 0;
-        int second = preSum[0].length - 1;
 
-        int end = N * N;
-        while (first < end && 0 <= second) {
-            int sum =  preSum[0][first] + preSum[1][second];
-            int firstCnt =1;
-            int secondCnt = 1;
-            if (sum == 0) {
-                while (first <= end - 2 && preSum[0][first] == preSum[0][first + 1]) {
-                    firstCnt++;
-                    first++;
-                }
-                while (0 < second && preSum[1][second] == preSum[1][second - 1]) {
-                    secondCnt++;
-                    second--;
-                }
-                answer += (long) firstCnt * secondCnt;
-            }
+        Arrays.sort(AB);
+        Arrays.sort(CD);
 
-            if (sum < 0) {
-                first++;
-            } else{
-                second--;
-            }
+        long answer = 0;
+        for (int i = 0; i < n * n; i++) {
+
+            int lb = lowerBound(-AB[i], CD);
+            int ub = upperBound(-AB[i], CD);
+
+            answer += (ub - lb);
         }
+
         System.out.println(answer);
+    }
+    
+    /*
+    타겟이 나올 수 있는 최초 위치
+    => 결과값 위치보다 더 작은 index 에는 target 보다 작은 값만 존재한다
+     */
+    static int lowerBound(int target, int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (arr[mid] >= target) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return start;
+    }
+
+    /*
+    타겟보다 큰 값이 나올 수 있는 최초 위치
+    => 결과값 위치보다 더 작은 index 에는 target 보다 작거나 같은 값만 존재한다
+     */
+    static int upperBound(int target, int[] arr) {
+        int start = 0;
+        int end = arr.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (arr[mid] <= target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+
+        return start;
     }
 }

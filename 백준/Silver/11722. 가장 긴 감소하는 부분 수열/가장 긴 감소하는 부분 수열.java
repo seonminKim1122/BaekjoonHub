@@ -1,33 +1,30 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
+        int[] numbers = new int[N];
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int[] A = new int[N];
         for (int i = 0; i < N; i++) {
-            A[i] = Integer.parseInt(st.nextToken());
+            numbers[i] = Integer.parseInt(st.nextToken());
         }
 
-        int[] dp = new int[N];
-        int result = dp[0] = 1;
-
-        for (int i = 1; i < N; i++) {
-            dp[i] = 1;
+        int[] LDS = new int[N];  // LDS[i]: 0 ~ i 까지의 부분 수열 중 numbers[i]를 포함한 가장 긴 감소하는 부분 수열의 길이
+        int answer = 0;
+        for (int i = 0; i < N; i++) {
+            LDS[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (A[i] < A[j]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                if (numbers[j] > numbers[i]) {
+                    LDS[i] = Math.max(LDS[i], LDS[j] + 1);
                 }
             }
-            result = Math.max(result, dp[i]);
+            answer = Math.max(answer, LDS[i]);
         }
 
-        System.out.println(result);
+        System.out.println(answer);
     }
 }

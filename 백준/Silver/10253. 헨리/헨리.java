@@ -24,19 +24,11 @@ public class Main {
                     answer.append(x);
                     break;
                 }
-
-                int gcd = gcd(a, b);
-                a = a / gcd;
-                b = b / gcd;
             }
 
             answer.append("\n");
         }
 
         System.out.println(answer);
-    }
-
-    public static int gcd(int a, int b) {
-        return b == 0 ? a : gcd(b, a % b);
     }
 }

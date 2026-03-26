@@ -34,7 +34,7 @@ public class Main {
             return;
         }
 
-        while (count + 2 <= K && l <= r) {
+        while (count + 2 <= K) {
             taste += (tastes[r] - tastes[l]);
             r--;
             l++;
